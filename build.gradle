@@ -22,5 +22,8 @@ allprojects {
         password nexusPassword
       }
     }
+    maven {
+      url "https://jitpack.io"
+    }
   }
 }
