@@ -5,6 +5,9 @@ import android.content.Context;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
+import com.orhanobut.hawk.Hawk;
+import com.orhanobut.hawk.HawkBuilder;
+import com.orhanobut.hawk.LogLevel;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import java.util.ArrayList;
@@ -22,6 +25,12 @@ public class MyApp extends Application {
     super.onCreate();
     AppLogger.debug = true;
     refWatcher = LeakCanary.install(this);
+
+    Hawk.init(this)
+        .setEncryptionMethod(HawkBuilder.EncryptionMethod.NO_ENCRYPTION)
+        .setStorage(HawkBuilder.newSharedPrefStorage(this))
+        .setLogLevel(LogLevel.FULL)
+        .build();
 
     if (BuildConfig.DEBUG) {
       Stetho.initialize(Stetho.newInitializerBuilder(this)

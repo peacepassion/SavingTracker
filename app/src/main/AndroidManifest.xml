@@ -20,6 +20,11 @@
             </intent-filter>
         </activity>
 
+      <activity android:name=".ui.SplashActivity" android:theme="@style/FullScreenTheme" android:configChanges="orientation"/>
+      <activity android:name=".ui.LoginActivity" android:configChanges="orientation"/>
+      <activity android:name=".ui.HomeActivity" android:configChanges="orientation"/>
+
+
     </application>
 
 </manifest>
