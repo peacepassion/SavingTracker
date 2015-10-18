@@ -10,21 +10,39 @@ import com.orhanobut.hawk.HawkBuilder;
 import com.orhanobut.hawk.LogLevel;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.squareup.okhttp.OkHttpClient;
 import java.util.ArrayList;
 import me.ele.commons.AppLogger;
 import org.shikato.infodumper.InfoDumperPlugin;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
 
 /**
  * Created by peacepassion on 15/8/11.
  */
 public class MyApp extends Application {
 
+  private static Retrofit retrofit =
+      new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
+          .baseUrl(BuildConfig.HOST)
+          .build();
+
+  {
+    OkHttpClient client = new OkHttpClient();
+    retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
+        .baseUrl(BuildConfig.HOST).client(client)
+        .build();
+  }
+
+  public static Retrofit getRetrofit() {
+    return retrofit;
+  }
+
   private RefWatcher refWatcher;
 
   @Override public void onCreate() {
     super.onCreate();
-    AppLogger.debug = true;
-    refWatcher = LeakCanary.install(this);
+    AppLogger.debug = BuildConfig.DEBUG;
 
     Hawk.init(this)
         .setEncryptionMethod(HawkBuilder.EncryptionMethod.NO_ENCRYPTION)
@@ -33,6 +51,7 @@ public class MyApp extends Application {
         .build();
 
     if (BuildConfig.DEBUG) {
+      refWatcher = LeakCanary.install(this);
       Stetho.initialize(Stetho.newInitializerBuilder(this)
           .enableDumpapp(new MyDumperPluginsProvider(this))
           .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
