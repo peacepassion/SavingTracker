@@ -16,21 +16,21 @@ import me.ele.commons.AppLogger;
 import org.shikato.infodumper.InfoDumperPlugin;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 
 /**
  * Created by peacepassion on 15/8/11.
  */
 public class MyApp extends Application {
 
-  private static Retrofit retrofit =
-      new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
-          .baseUrl(BuildConfig.HOST)
-          .build();
+  private static Retrofit retrofit;
 
   {
     OkHttpClient client = new OkHttpClient();
     retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
-        .baseUrl(BuildConfig.HOST).client(client)
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .baseUrl(BuildConfig.HOST)
+        .client(client)
         .build();
   }
 

@@ -13,7 +13,7 @@ repositories {
 }
 
 android {
-  compileSdkVersion 22
+  compileSdkVersion 23
   buildToolsVersion "23"
 
   lintOptions {
@@ -22,7 +22,7 @@ android {
 
   defaultConfig {
     minSdkVersion 15
-    targetSdkVersion 22
+    targetSdkVersion 23
     versionCode 1
     versionName "1.0"
   }
@@ -48,10 +48,16 @@ dependencies {
   compile 'com.squareup.okhttp:okhttp:2.2.0'
   compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
   compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+  compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
   compile 'com.google.code.gson:gson:2.3.1'
   compile 'com.github.shikato:info-dumper:0.0.2'
   compile 'com.facebook.stetho:stetho:1.2.0'
   compile 'com.github.orhanobut:hawk:1.19'
+
+  compile 'io.reactivex:rxjava:1.0.10'
+  compile 'io.reactivex:rxandroid:1.0.1'
+  compile 'com.trello:rxlifecycle:0.3.0'
+  compile 'com.trello:rxlifecycle-components:0.3.0'
 
   compile 'me.ele:commons:1.1.1'
 

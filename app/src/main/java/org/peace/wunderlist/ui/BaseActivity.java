@@ -2,20 +2,19 @@ package org.peace.wunderlist.ui;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import org.peace.wunderlist.R;
 
 /**
  * Created by peacepassion on 15/10/14.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
 
   @Bind(R.id.root) protected LinearLayout root;
 
