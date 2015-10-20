@@ -8,4 +8,5 @@
   <string name="expense_category">Category: </string>
   <string name="confirm">Confirm</string>
   <string name="view_expense">View Expense History</string>
+  <string name="user_center">User Center</string>
 </resources>

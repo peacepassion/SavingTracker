@@ -15,14 +15,14 @@
         android:id="@+id/qq_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/accounts_icon_qq"
+        android:src="@drawable/qq"
         />
 
     <ImageView
         android:id="@+id/weixin_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/accounts_icon_weichat"
+        android:src="@drawable/wechat"
         />
   </org.peace.savingtracker.ui.widget.IconListLayout>
 

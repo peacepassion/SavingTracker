@@ -17,4 +17,10 @@
       style="@style/HomeButton"
       />
 
+  <Button
+      android:id="@+id/user_center"
+      android:text="@string/user_center"
+      style="@style/HomeButton"
+      />
+
 </LinearLayout>

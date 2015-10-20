@@ -12,6 +12,7 @@ import org.peace.savingtracker.R;
 import org.peace.savingtracker.ui.AddExpenseActivity;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.history.ExpenseHistoryActivity;
+import org.peace.savingtracker.ui.user.UserActivity;
 
 /**
  * Created by peacepassion on 15/10/14.
@@ -25,7 +26,8 @@ import org.peace.savingtracker.ui.history.ExpenseHistoryActivity;
     attachDebugDrawer();
   }
 
-  @OnClick({ R.id.add_expense, R.id.view_expense_history }) public void onClick(View v) {
+  @OnClick({ R.id.add_expense, R.id.view_expense_history, R.id.user_center })
+  public void onClick(View v) {
     int id = v.getId();
     switch (id) {
       case R.id.add_expense:
@@ -33,6 +35,10 @@ import org.peace.savingtracker.ui.history.ExpenseHistoryActivity;
         break;
       case R.id.view_expense_history:
         startActivity(new Intent(this, ExpenseHistoryActivity.class));
+        break;
+      case R.id.user_center:
+        startActivity(new Intent(this, UserActivity.class));
+        break;
       default:
         break;
     }

@@ -5,6 +5,7 @@ package org.peace.savingtracker.consts;
  */
 public interface HawkKeys {
 
-  String IS_LOGGED = "is_logged";
+  String CURRENT_USER = "current_user";
 
+  String QQ_TOKEN = "qq_token";
 }
