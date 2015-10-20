@@ -1,4 +1,4 @@
-package org.peace.wunderlist.ui;
+package org.peace.savingtracker.ui;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import org.peace.wunderlist.R;
+import org.peace.savingtracker.R;
 
 /**
  * Created by peacepassion on 15/10/14.

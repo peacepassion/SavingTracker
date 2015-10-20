@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     >
 
-  <org.peace.wunderlist.ui.IconListLayout
+  <org.peace.savingtracker.ui.IconListLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -24,6 +24,6 @@
         android:layout_height="wrap_content"
         android:src="@drawable/accounts_icon_weichat"
         />
-  </org.peace.wunderlist.ui.IconListLayout>
+  </org.peace.savingtracker.ui.IconListLayout>
 
 </RelativeLayout>

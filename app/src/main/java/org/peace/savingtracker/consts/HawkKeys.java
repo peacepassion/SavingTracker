@@ -1,4 +1,4 @@
-package org.peace.wunderlist.consts;
+package org.peace.savingtracker.consts;
 
 /**
  * Created by peacepassion on 15/10/14.

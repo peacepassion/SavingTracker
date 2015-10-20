@@ -1,7 +1,7 @@
-package org.peace.wunderlist.ui;
+package org.peace.savingtracker.ui;
 
 import android.os.Bundle;
-import org.peace.wunderlist.R;
+import org.peace.savingtracker.R;
 
 /**
  * Created by peacepassion on 15/10/14.

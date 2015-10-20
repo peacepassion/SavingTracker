@@ -1,4 +1,4 @@
-package org.peace.wunderlist;
+package org.peace.savingtracker;
 
 import android.app.Application;
 import android.content.Context;

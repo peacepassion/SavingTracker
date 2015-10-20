@@ -1,9 +1,9 @@
-package org.peace.wunderlist.ui;
+package org.peace.savingtracker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import com.orhanobut.hawk.Hawk;
-import org.peace.wunderlist.consts.HawkKeys;
+import org.peace.savingtracker.consts.HawkKeys;
 
 public class LauncherActivity extends BaseActivity {
 
