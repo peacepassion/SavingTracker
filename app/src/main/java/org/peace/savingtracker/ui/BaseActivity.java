@@ -22,13 +22,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     super.onCreate(savedInstanceState);
     if (getLayoutRes() > 0) {
       setContentView(R.layout.activity_base);
-      ButterKnife.bind(this);
       View content = LayoutInflater.from(this).inflate(getLayoutRes(), root, false);
       if (hasTitle()) {
         Toolbar toolbar = inflateToolbar();
         root.addView(toolbar);
       }
       root.addView(content);
+      ButterKnife.bind(this);
     }
   }
 
