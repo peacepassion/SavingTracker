@@ -1,13 +1,21 @@
 package org.peace.savingtracker.ui;
 
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import org.peace.savingtracker.R;
 
@@ -16,19 +24,35 @@ import org.peace.savingtracker.R;
  */
 public abstract class BaseActivity extends RxAppCompatActivity {
 
-  @Bind(R.id.root) protected LinearLayout root;
+  protected LinearLayout root;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (getLayoutRes() > 0) {
       setContentView(R.layout.activity_base);
-      View content = LayoutInflater.from(this).inflate(getLayoutRes(), root, false);
+      root = (LinearLayout) findViewById(R.id.root);
       if (hasTitle()) {
-        Toolbar toolbar = inflateToolbar();
-        root.addView(toolbar);
+        inflateToolbar();
+        updateStatusBar();
       }
-      root.addView(content);
+      LayoutInflater.from(this).inflate(getLayoutRes(), root, true);
       ButterKnife.bind(this);
+    }
+  }
+
+  protected void updateStatusBar() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      Window window = getWindow();
+      WindowManager.LayoutParams params = window.getAttributes();
+      int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+      params.flags |= bits;
+      window.setAttributes(params);
+      SystemBarTintManager manager = new SystemBarTintManager(this);
+      manager.setStatusBarTintEnabled(true);
+      TypedValue typedValue = new TypedValue();
+      Resources.Theme theme = getTheme();
+      theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
+      manager.setStatusBarTintColor(typedValue.data);
     }
   }
 
@@ -40,7 +64,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
   private Toolbar inflateToolbar() {
     Toolbar toolbar = (Toolbar) LayoutInflater.from(this)
-        .inflate(R.layout.include_toolbar, null, false)
+        .inflate(R.layout.include_toolbar, root, true)
         .findViewById(R.id.tool_bar);
     setSupportActionBar(toolbar);
     return toolbar;

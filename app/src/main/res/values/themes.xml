@@ -1,20 +1,26 @@
 <resources>
 
-  <style name="AppTheme"
+  <style name="BaseTheme"
       parent="Theme.AppCompat.Light.NoActionBar">
-
+    <item name="colorPrimary">@color/app_primary_accent</item>
+    <item name="colorPrimaryDark">@color/cyan_a700_plus</item>
+    <item name="android:windowBackground">@color/background</item>
   </style>
 
-  <style name="FullScreenTheme"
-      parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="windowNoTitle">true</item>
-    <item name="windowActionBar">false</item>
-    <item name="android:windowFullscreen">true</item>
-    <item name="android:windowContentOverlay">@null</item>
+  <style name="STBaseTheme" parent="BaseTheme">
+  </style>
+
+  <style name="STTheme"
+      parent="STBaseTheme">
   </style>
 
   <style name="ToolBarTheme"
-      parent="Base.Widget.AppCompat.Toolbar">
+      parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+  </style>
+
+  <style name="ToolBarTextAppearance"
+      parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <item name="android:textColor">@color/io15_white</item>
   </style>
 
 </resources>
