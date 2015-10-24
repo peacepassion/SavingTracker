@@ -1,31 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.peace.savingtracker">
+    package="org.peace.savingtracker"
+    >
 
-    <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application
-        android:allowBackup="true"
-        android:name=".MyApp"
-        android:icon="@drawable/launcher_icon"
+  <application
+      android:allowBackup="true"
+      android:name=".MyApp"
+      android:icon="@drawable/launcher_icon"
+      android:label="@string/app_name"
+      android:theme="@style/STTheme"
+      >
+    <activity
+        android:name=".ui.LauncherActivity"
+        android:noHistory="true"
+        android:theme="@style/STSplashTheme"
         android:label="@string/app_name"
-        android:theme="@style/STTheme" >
-        <activity
-            android:name=".ui.LauncherActivity"
-            android:noHistory="true"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        >
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
 
-      <activity android:name=".ui.SplashActivity" android:configChanges="orientation"/>
-      <activity android:name=".ui.LoginActivity" android:configChanges="orientation"/>
-      <activity android:name=".ui.HomeActivity" android:configChanges="orientation"/>
+    <activity
+        android:name=".ui.SplashActivity"
+        android:theme="@style/STSplashTheme"
+        android:configChanges="orientation"
+        />
+    <activity
+        android:name=".ui.LoginActivity"
+        android:configChanges="orientation"
+        />
+    <activity
+        android:name=".ui.HomeActivity"
+        android:configChanges="orientation"
+        />
 
 
-    </application>
+  </application>
 
 </manifest>

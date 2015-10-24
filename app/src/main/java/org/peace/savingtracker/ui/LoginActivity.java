@@ -16,5 +16,4 @@ public class LoginActivity extends BaseActivity {
   @Override protected int getLayoutRes() {
     return R.layout.activity_login;
   }
-
 }

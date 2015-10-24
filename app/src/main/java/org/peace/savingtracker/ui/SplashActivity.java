@@ -12,10 +12,10 @@ public class SplashActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    findViewById(android.R.id.content).postDelayed(new Runnable() {
-      @Override public void run() {
-        SplashActivity.this.finish();
-      }
+    overridePendingTransition(0, 0);
+    findViewById(android.R.id.content).postDelayed(() -> {
+      finish();
+      overridePendingTransition(0, 0);
     }, DURATION);
   }
 

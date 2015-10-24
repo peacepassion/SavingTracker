@@ -7,11 +7,16 @@
     <item name="android:windowBackground">@color/background</item>
   </style>
 
-  <style name="STBaseTheme" parent="BaseTheme">
+  <style name="STBaseTheme"
+      parent="BaseTheme">
   </style>
 
   <style name="STTheme"
       parent="STBaseTheme">
+    <item name="android:windowAnimationStyle">@style/STTransitionAnim</item>
+  </style>
+
+  <style name="STSplashTheme" parent="STBaseTheme">
   </style>
 
   <style name="ToolBarTheme"
@@ -21,6 +26,12 @@
   <style name="ToolBarTextAppearance"
       parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
     <item name="android:textColor">@color/io15_white</item>
+  </style>
+
+  <style name="STTransitionAnim"
+      parent="@android:style/Animation.Activity">
+    <item name="android:activityOpenEnterAnimation">@anim/left_in</item>
+    <item name="android:activityCloseExitAnimation">@anim/right_out</item>
   </style>
 
 </resources>
