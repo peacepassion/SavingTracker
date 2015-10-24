@@ -12,6 +12,7 @@
         android:theme="@style/STTheme" >
         <activity
             android:name=".ui.LauncherActivity"
+            android:noHistory="true"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

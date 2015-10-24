@@ -10,7 +10,7 @@ public class HomeActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setTitle(getString(R.string.home_activity));
+    setTitle(getString(R.string.app_name));
   }
 
   @Override protected int getLayoutRes() {

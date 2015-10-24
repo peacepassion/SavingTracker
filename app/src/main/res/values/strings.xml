@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">MockWunderList</string>
-  <string name="home_activity">To do list</string>
+  <string name="app_name">Saving Tracker</string>
 
 </resources>

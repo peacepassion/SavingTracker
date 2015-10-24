@@ -15,7 +15,6 @@ public class LauncherActivity extends BaseActivity {
       startActivity(new Intent(this, LoginActivity.class));
     }
     startSplashActivity();
-    finish();
   }
 
   private void startSplashActivity() {
