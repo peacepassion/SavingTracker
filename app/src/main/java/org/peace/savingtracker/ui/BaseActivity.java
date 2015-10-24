@@ -1,22 +1,20 @@
 package org.peace.savingtracker.ui;
 
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import org.peace.savingtracker.MyApp;
+import org.peace.savingtracker.MyAppComponent;
 import org.peace.savingtracker.R;
 
 /**
@@ -25,9 +23,15 @@ import org.peace.savingtracker.R;
 public abstract class BaseActivity extends RxAppCompatActivity {
 
   protected LinearLayout root;
+  protected MyAppComponent appComponent;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    appComponent = ((MyApp) getApplicationContext()).getAppComponent();
+    initLayout();
+  }
+
+  private void initLayout() {
     if (getLayoutRes() > 0) {
       setContentView(R.layout.activity_base);
       root = (LinearLayout) findViewById(R.id.root);

@@ -2,46 +2,41 @@ package org.peace.savingtracker;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.Nullable;
+import autodagger.AutoComponent;
+import autodagger.AutoInjector;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.HawkBuilder;
 import com.orhanobut.hawk.LogLevel;
-import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import com.squareup.okhttp.OkHttpClient;
 import java.util.ArrayList;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import me.ele.commons.AppLogger;
 import org.shikato.infodumper.InfoDumperPlugin;
-import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
 
 /**
  * Created by peacepassion on 15/8/11.
  */
-public class MyApp extends Application {
+@Singleton @AutoComponent(modules = { MyAppModule.class }) @AutoInjector public class MyApp
+    extends Application {
 
-  private static Retrofit retrofit;
+  @Inject Retrofit retrofit;
 
-  {
-    OkHttpClient client = new OkHttpClient();
-    retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-        .baseUrl(BuildConfig.HOST)
-        .client(client)
-        .build();
-  }
+  @Nullable @Inject RefWatcher refWatcher;
 
-  public static Retrofit getRetrofit() {
-    return retrofit;
-  }
-
-  private RefWatcher refWatcher;
+  private MyAppComponent appComponent;
 
   @Override public void onCreate() {
     super.onCreate();
+
+    appComponent = DaggerMyAppComponent.builder().myAppModule(new MyAppModule(this)).build();
+    appComponent.inject(this);
+
     AppLogger.debug = BuildConfig.DEBUG;
 
     Hawk.init(this)
@@ -51,7 +46,6 @@ public class MyApp extends Application {
         .build();
 
     if (BuildConfig.DEBUG) {
-      refWatcher = LeakCanary.install(this);
       Stetho.initialize(Stetho.newInitializerBuilder(this)
           .enableDumpapp(new MyDumperPluginsProvider(this))
           .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
@@ -59,9 +53,8 @@ public class MyApp extends Application {
     }
   }
 
-  public static RefWatcher refWatcher(Context context) {
-    MyApp app = (MyApp) context.getApplicationContext();
-    return app.refWatcher;
+  public MyAppComponent getAppComponent() {
+    return appComponent;
   }
 
   private static class MyDumperPluginsProvider implements DumperPluginsProvider {
