@@ -10,24 +10,31 @@ import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import autodagger.AutoInjector;
 import butterknife.ButterKnife;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import javax.inject.Inject;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.MyAppComponent;
 import org.peace.savingtracker.R;
+import org.peace.savingtracker.base.dagger.ActivityScope;
+import retrofit.Retrofit;
 
 /**
  * Created by peacepassion on 15/10/14.
  */
-public abstract class BaseActivity extends RxAppCompatActivity {
+@AutoInjector({ MyApp.class }) @ActivityScope public abstract class BaseActivity
+    extends RxAppCompatActivity {
 
   protected LinearLayout root;
   protected MyAppComponent appComponent;
+  @Inject protected Retrofit retrofit;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     appComponent = ((MyApp) getApplicationContext()).getAppComponent();
+    appComponent.inject(this);
     initLayout();
   }
 

@@ -12,6 +12,8 @@ import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.HawkBuilder;
 import com.orhanobut.hawk.LogLevel;
 import com.squareup.leakcanary.RefWatcher;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,6 +53,9 @@ import retrofit.Retrofit;
           .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
           .build());
     }
+
+    RealmConfiguration configuration = new RealmConfiguration.Builder(this).build();
+    Realm.setDefaultConfiguration(configuration);
   }
 
   public MyAppComponent getAppComponent() {
