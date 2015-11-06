@@ -1,7 +1,9 @@
 package org.peace.savingtracker.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import autodagger.AutoInjector;
+import org.peace.savingtracker.BuildConfig;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 
@@ -14,6 +16,19 @@ import org.peace.savingtracker.R;
     super.onCreate(savedInstanceState);
     appComponent.inject(this);
     setTitle(getString(R.string.app_name));
+    attachDebugDrawer();
+  }
+
+  private void attachDebugDrawer() {
+    if (BuildConfig.DEBUG) {
+      try {
+        Class.forName("org.peace.savingtracker.ui.UIUtil")
+            .getMethod("attachDebugView", Activity.class)
+            .invoke(null, this);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @Override protected void onDestroy() {
