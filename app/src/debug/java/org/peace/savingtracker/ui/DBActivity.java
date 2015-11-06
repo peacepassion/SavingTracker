@@ -12,12 +12,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import java.sql.Date;
+import java.util.List;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.Expense;
+import org.peace.savingtracker.model.ExpenseDAO;
+import org.peace.savingtracker.model.ExpenseRealmDAO;
 import org.peace.savingtracker.utils.ResUtil;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by peacepassion on 15/11/6.
@@ -28,15 +33,22 @@ public class DBActivity extends BaseActivity {
   DBAdapter dbAdapter;
 
   private Realm realm;
+  private ExpenseDAO expenseDAO;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     realm = Realm.getDefaultInstance();
+    expenseDAO = new ExpenseRealmDAO(realm);
     setupDBRecyclerView();
   }
 
+  @Override protected void onDestroy() {
+    realm.close();
+    super.onDestroy();
+  }
+
   private void setupDBRecyclerView() {
-    dbAdapter = new DBAdapter(realm.where(Expense.class).findAll());
+    dbAdapter = new DBAdapter(expenseDAO.queryAll());
     dbRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     dbRecyclerView.setAdapter(dbAdapter);
   }
@@ -45,12 +57,38 @@ public class DBActivity extends BaseActivity {
     return R.layout.layout_db_debug;
   }
 
+  @OnClick(R.id.clear_db) public void onClick(View v) {
+    int id = v.getId();
+    switch (id) {
+      case R.id.clear_db:
+        ExpenseDAO expenseDAO = new ExpenseRealmDAO(realm);
+        Observable.from(expenseDAO.queryAll()).subscribe(new Subscriber<Expense>() {
+          @Override public void onCompleted() {
+            dbAdapter.updateData(expenseDAO.queryAll());
+          }
+
+          @Override public void onError(Throwable e) {
+
+          }
+
+          @Override public void onNext(Expense expense) {
+            expenseDAO.delete(expense);
+          }
+        });
+    }
+  }
+
   static class DBAdapter extends RecyclerView.Adapter<DBViewHolder> {
 
-    RealmResults<Expense> expenses;
+    List<Expense> expenses;
 
-    public DBAdapter(RealmResults<Expense> expenses) {
+    public DBAdapter(List<Expense> expenses) {
       this.expenses = expenses;
+    }
+
+    public void updateData(List<Expense> data) {
+      expenses = data;
+      notifyDataSetChanged();
     }
 
     @DBViewHolder.ViewType @Override public int getItemViewType(int position) {
@@ -134,7 +172,7 @@ public class DBActivity extends BaseActivity {
     }
 
     private TextView[] getAllTVs() {
-      return new TextView[] {idTV, userIdTV, nameTV, dateTV, categoryTV, valueTV};
+      return new TextView[] { idTV, userIdTV, nameTV, dateTV, categoryTV, valueTV };
     }
 
     @IntDef({ DBViewHolder.VIEW_TYPE_HEAD, DBViewHolder.VIEW_TYPE_CONTENT }) @interface ViewType {

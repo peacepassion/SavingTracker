@@ -6,6 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+  <Button
+      android:id="@+id/clear_db"
+      android:text="Clear DB"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      />
+
   <android.support.v7.widget.RecyclerView
       android:id="@+id/db_list"
       android:layout_width="match_parent"
