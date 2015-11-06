@@ -3,10 +3,11 @@
     package="org.peace.savingtracker"
     >
 
-  <application>
+  <application
+      android:theme="@style/STTheme"
+      >
     <activity
         android:name=".ui.DBActivity"
-        android:theme="@style/STSplashTheme"
         />
   </application>
 
