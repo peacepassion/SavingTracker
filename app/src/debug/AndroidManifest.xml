@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.peace.savingtracker"
+    >
+
+  <application>
+    <activity
+        android:name=".ui.DBActivity"
+        android:theme="@style/STSplashTheme"
+        />
+  </application>
+
+</manifest>

@@ -17,7 +17,7 @@ public class UIUtil {
         (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
     View content = contentParent.getChildAt(0);
     contentParent.removeView(content);
-    View root = inflater.inflate(R.layout.layout_home_debug, contentParent, true);
+    View root = inflater.inflate(R.layout.layout_home_debug_container, contentParent, true);
     ViewGroup homeContainer = (ViewGroup) root.findViewById(R.id.home_container);
     homeContainer.addView(content);
   }

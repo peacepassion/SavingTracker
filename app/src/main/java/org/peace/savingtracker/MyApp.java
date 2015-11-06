@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import me.ele.commons.AppLogger;
+import org.peace.savingtracker.utils.ResUtil;
 import org.shikato.infodumper.InfoDumperPlugin;
 import retrofit.Retrofit;
 
@@ -56,6 +57,8 @@ import retrofit.Retrofit;
 
     RealmConfiguration configuration = new RealmConfiguration.Builder(this).build();
     Realm.setDefaultConfiguration(configuration);
+
+    ResUtil.init(this);
   }
 
   public MyAppComponent getAppComponent() {
