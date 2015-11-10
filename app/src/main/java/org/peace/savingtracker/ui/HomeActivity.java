@@ -2,7 +2,9 @@ package org.peace.savingtracker.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import autodagger.AutoInjector;
+import butterknife.OnClick;
 import org.peace.savingtracker.BuildConfig;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
@@ -17,6 +19,16 @@ import org.peace.savingtracker.R;
     appComponent.inject(this);
     setTitle(getString(R.string.app_name));
     attachDebugDrawer();
+  }
+
+  @OnClick({R.id.add_expense}) public void onClick(View v) {
+    int id = v.getId();
+    switch (id) {
+      case R.id.add_expense:
+        break;
+      default:
+        break;
+    }
   }
 
   private void attachDebugDrawer() {

@@ -38,6 +38,7 @@
         android:screenOrientation="portrait"
         android:configChanges="orientation|screenSize|keyboardHidden"
         />
+    <activity android:name=".ui.AddExpenseActivity"/>
 
   </application>
 

@@ -2,5 +2,6 @@
 <resources>
 
   <string name="app_name">Saving Tracker</string>
+  <string name="add_expense">Add Expense</string>
 
 </resources>
