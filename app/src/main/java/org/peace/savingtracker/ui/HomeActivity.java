@@ -38,4 +38,8 @@ import org.peace.savingtracker.R;
   @Override protected int getLayoutRes() {
     return R.layout.activity_home;
   }
+
+  @Override protected boolean allowActionUp() {
+    return false;
+  }
 }

@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -39,16 +40,17 @@ import retrofit.Retrofit;
   }
 
   private void initLayout() {
-    if (getLayoutRes() > 0) {
-      setContentView(R.layout.activity_base);
-      root = (LinearLayout) findViewById(R.id.root);
-      if (hasTitle()) {
-        inflateToolbar();
-        updateStatusBar();
-      }
-      LayoutInflater.from(this).inflate(getLayoutRes(), root, true);
-      ButterKnife.bind(this);
+    if (getLayoutRes() <= 0) {
+      return;
     }
+    setContentView(R.layout.activity_base);
+    root = (LinearLayout) findViewById(R.id.root);
+    if (hasTitle()) {
+      initToolbar();
+      updateStatusBar();
+    }
+    LayoutInflater.from(this).inflate(getLayoutRes(), root, true);
+    ButterKnife.bind(this);
   }
 
   protected void updateStatusBar() {
@@ -69,16 +71,35 @@ import retrofit.Retrofit;
 
   @LayoutRes abstract protected int getLayoutRes();
 
+  protected boolean allowActionUp() {
+    return true;
+  }
+
   protected boolean hasTitle() {
     return true;
   }
 
-  private Toolbar inflateToolbar() {
+  private Toolbar initToolbar() {
     Toolbar toolbar = (Toolbar) LayoutInflater.from(this)
         .inflate(R.layout.include_toolbar, root, true)
         .findViewById(R.id.tool_bar);
     setSupportActionBar(toolbar);
+    if (allowActionUp()) {
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
     return toolbar;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
+    switch (id) {
+      case android.R.id.home:
+        if (allowActionUp()) {
+          finish();
+          return true;
+        }
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   protected final void setTitle(String title) {
