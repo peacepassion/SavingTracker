@@ -8,6 +8,8 @@ import autodagger.AutoInjector;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.HawkBuilder;
 import com.orhanobut.hawk.LogLevel;
@@ -19,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import me.ele.commons.AppLogger;
 import org.peace.savingtracker.utils.ResUtil;
+import org.peace.savingtracker.utils.SystemUtil;
 import org.shikato.infodumper.InfoDumperPlugin;
 import retrofit.Retrofit;
 
@@ -59,6 +62,8 @@ import retrofit.Retrofit;
     Realm.setDefaultConfiguration(configuration);
 
     ResUtil.init(this);
+    SystemUtil.init(this);
+    Iconify.with(new FontAwesomeModule());
   }
 
   public MyAppComponent getAppComponent() {

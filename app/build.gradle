@@ -70,6 +70,7 @@ dependencies {
   compile 'com.github.shikato:info-dumper:0.0.2'
   compile 'com.facebook.stetho:stetho:1.2.0'
   compile 'com.github.orhanobut:hawk:1.19'
+  compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.0'
 
   compile 'de.greenrobot:greendao:2.0.0'
 

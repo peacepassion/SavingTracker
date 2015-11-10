@@ -4,7 +4,6 @@ import android.support.annotation.ArrayRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import org.peace.savingtracker.MyApp;
-import org.peace.savingtracker.R;
 
 /**
  * Created by peacepassion on 15/11/6.

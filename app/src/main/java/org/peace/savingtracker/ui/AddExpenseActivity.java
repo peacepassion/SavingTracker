@@ -9,15 +9,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import butterknife.Bind;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.view.ViewClickEvent;
+import com.jakewharton.rxbinding.view.ViewFocusChangeEvent;
 import io.realm.Realm;
-import java.util.Date;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.Expense;
 import org.peace.savingtracker.model.ExpenseDAO;
 import org.peace.savingtracker.model.ExpenseRealmDAO;
+import org.peace.savingtracker.utils.SystemUtil;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by peacepassion on 15/11/10.
@@ -36,6 +35,7 @@ public class AddExpenseActivity extends BaseActivity {
     initDAO();
     initCategorySpinner();
     initConfirmButton();
+    initExpenseAmountET();
   }
 
   @Override protected void onDestroy() {
@@ -67,6 +67,14 @@ public class AddExpenseActivity extends BaseActivity {
     });
   }
 
+  private void initExpenseAmountET() {
+    RxView.focusChangeEvents(expenseAmountET).subscribe(viewFocusChangeEvent -> {
+      if (!viewFocusChangeEvent.hasFocus()) {
+        SystemUtil.hideKeyboard(expenseAmountET);
+      }
+    });
+  }
+
   @Override protected int getLayoutRes() {
     return R.layout.activity_add_expense;
   }
@@ -83,12 +91,12 @@ public class AddExpenseActivity extends BaseActivity {
         return false;
       }
       String content = expenseAmountET.getText().toString();
-      float value = 0;
       try {
-        value = Float.valueOf(content);
+        Float.valueOf(content);
       } catch (Exception e) {
-        Snackbar.make(getWindow().getDecorView(), "Expense amount must be a valid number.",
-            Snackbar.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(expenseAmountET, "Expense amount must be a valid number.",
+            Snackbar.LENGTH_SHORT);
+        snackbar.show();
         return false;
       }
       return true;

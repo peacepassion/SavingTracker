@@ -22,12 +22,14 @@ import org.peace.savingtracker.R;
     attachDebugDrawer();
   }
 
-  @OnClick({R.id.add_expense}) public void onClick(View v) {
+  @OnClick({ R.id.add_expense, R.id.view_expense_history }) public void onClick(View v) {
     int id = v.getId();
     switch (id) {
       case R.id.add_expense:
         startActivity(new Intent(this, AddExpenseActivity.class));
         break;
+      case R.id.view_expense_history:
+        startActivity(new Intent(this, ExpenseHistoryActivity.class));
       default:
         break;
     }
