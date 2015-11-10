@@ -1,8 +1,10 @@
 package org.peace.savingtracker.utils;
 
+import android.support.annotation.ArrayRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import org.peace.savingtracker.MyApp;
+import org.peace.savingtracker.R;
 
 /**
  * Created by peacepassion on 15/11/6.
@@ -17,5 +19,9 @@ public class ResUtil {
 
   @ColorInt public static int getColor(@ColorRes int color) {
     return myApp.getResources().getColor(color);
+  }
+
+  public static String[] getStringArray(@ArrayRes int array) {
+    return myApp.getResources().getStringArray(array);
   }
 }

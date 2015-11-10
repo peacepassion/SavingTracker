@@ -1,6 +1,7 @@
 package org.peace.savingtracker.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import autodagger.AutoInjector;
@@ -25,6 +26,7 @@ import org.peace.savingtracker.R;
     int id = v.getId();
     switch (id) {
       case R.id.add_expense:
+        startActivity(new Intent(this, AddExpenseActivity.class));
         break;
       default:
         break;

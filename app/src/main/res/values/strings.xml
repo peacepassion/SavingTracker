@@ -3,5 +3,8 @@
 
   <string name="app_name">Saving Tracker</string>
   <string name="add_expense">Add Expense</string>
-
+  <string name="expense_amount">Amount: </string>
+  <string name="expense_amount_hint">Please input expense amount here.</string>
+  <string name="expense_category">Category: </string>
+  <string name="confirm">Confirm</string>
 </resources>
