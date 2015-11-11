@@ -5,33 +5,25 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import autodagger.AutoInjector;
 import butterknife.OnClick;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
-import javax.inject.Inject;
 import me.ele.commons.AppLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.ui.base.BaseActivity;
-import org.peace.savingtracker.ui.user.UserActivity;
-import org.peace.savingtracker.user.User;
-import org.peace.savingtracker.user.UserManager;
+import org.peace.savingtracker.ui.home.HomeActivity;
 
 /**
  * Created by peacepassion on 15/10/14.
  */
-@AutoInjector(MyApp.class) public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity {
 
   private static final String QQ_PERMISSION = "get_user_info,get_simple_userinfo,get_info";
-
-  @Inject UserManager userManager;
 
   private Tencent tencent;
   private String appId = "1104924318";
@@ -39,7 +31,6 @@ import org.peace.savingtracker.user.UserManager;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    appComponent.inject(this);
     setTitle("登录");
     initQQ();
   }
@@ -117,8 +108,7 @@ import org.peace.savingtracker.user.UserManager;
         try {
           String nickname = response.getString("nickname");
           userManager.qqUserLogin(tencent.getOpenId(), tencent.getAccessToken(), nickname);
-          startActivity(new Intent(LoginActivity.this, UserActivity.class));
-          finish();
+          goHome();
         } catch (JSONException e) {
           e.printStackTrace();
         }
@@ -133,5 +123,11 @@ import org.peace.savingtracker.user.UserManager;
       }
     };
     userInfo.getUserInfo(listener);
+  }
+
+  private void goHome() {
+    Intent intent = new Intent(this, HomeActivity.class);
+    startActivity(intent);
+    finish();
   }
 }

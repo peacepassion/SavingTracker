@@ -14,17 +14,13 @@ import org.peace.savingtracker.user.UserManager;
 /**
  * Created by peacepassion on 15/11/11.
  */
-@AutoInjector(MyApp.class)
 public class UserActivity extends BaseActivity {
-
-  @Inject UserManager userManager;
 
   @Bind(R.id.user_id) TextView userIdTV;
   @Bind(R.id.username) TextView userNameTV;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    appComponent.inject(this);
     initUI();
   }
 

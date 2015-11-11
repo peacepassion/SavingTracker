@@ -1,5 +1,6 @@
 package org.peace.savingtracker.ui.base;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.MyAppComponent;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.base.dagger.ActivityScope;
+import org.peace.savingtracker.ui.login.LoginActivity;
+import org.peace.savingtracker.user.UserManager;
 import retrofit.Retrofit;
 
 /**
@@ -30,12 +33,19 @@ import retrofit.Retrofit;
 
   protected LinearLayout root;
   protected MyAppComponent appComponent;
+
   @Inject protected Retrofit retrofit;
+  @Inject protected UserManager userManager;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     appComponent = ((MyApp) getApplicationContext()).getAppComponent();
     appComponent.inject(this);
+    if (needLogin() && !userManager.isLogged()) {
+      startActivity(new Intent(this, LoginActivity.class));
+      finish();
+      return;
+    }
     initLayout();
   }
 
@@ -77,6 +87,10 @@ import retrofit.Retrofit;
 
   protected boolean hasTitle() {
     return true;
+  }
+
+  protected boolean needLogin() {
+    return false;
   }
 
   private Toolbar initToolbar() {

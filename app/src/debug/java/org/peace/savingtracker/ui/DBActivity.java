@@ -43,6 +43,10 @@ public class DBActivity extends BaseActivity {
     setupDBRecyclerView();
   }
 
+  @Override protected boolean needLogin() {
+    return true;
+  }
+
   @Override protected void onDestroy() {
     realm.close();
     super.onDestroy();

@@ -15,6 +15,7 @@ import org.peace.savingtracker.model.Expense;
 import org.peace.savingtracker.model.ExpenseDAO;
 import org.peace.savingtracker.model.ExpenseRealmDAO;
 import org.peace.savingtracker.ui.base.BaseActivity;
+import org.peace.savingtracker.user.User;
 import org.peace.savingtracker.utils.SystemUtil;
 
 /**
@@ -35,6 +36,10 @@ public class AddExpenseActivity extends BaseActivity {
     initCategorySpinner();
     initConfirmButton();
     initExpenseAmountET();
+  }
+
+  @Override protected boolean needLogin() {
+    return true;
   }
 
   @Override protected void onDestroy() {
@@ -59,7 +64,8 @@ public class AddExpenseActivity extends BaseActivity {
       return validator.validate();
     }).subscribe(viewClickEvent -> {
       double value = Double.valueOf(expenseAmountET.getText().toString());
-      Expense obj = new Expense(expenseDAO.getMaxId() + 1, "test-user", "test-uer",
+      User user = userManager.getCurrentUser();
+      Expense obj = new Expense(expenseDAO.getMaxId() + 1, user.getId(), user.getUsername(),
           System.currentTimeMillis(), (String) expenseCategorySp.getSelectedItem(), value);
       expenseDAO.insert(obj);
       finish();

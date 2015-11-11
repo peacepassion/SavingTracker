@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import autodagger.AutoInjector;
 import butterknife.OnClick;
 import org.peace.savingtracker.BuildConfig;
-import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.ui.AddExpenseActivity;
 import org.peace.savingtracker.ui.base.BaseActivity;
@@ -17,11 +15,10 @@ import org.peace.savingtracker.ui.user.UserActivity;
 /**
  * Created by peacepassion on 15/10/14.
  */
-@AutoInjector({ MyApp.class }) public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    appComponent.inject(this);
     setTitle(getString(R.string.app_name));
     attachDebugDrawer();
   }
