@@ -9,14 +9,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import butterknife.Bind;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.view.ViewFocusChangeEvent;
 import io.realm.Realm;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.Expense;
 import org.peace.savingtracker.model.ExpenseDAO;
 import org.peace.savingtracker.model.ExpenseRealmDAO;
+import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.utils.SystemUtil;
-import rx.functions.Action1;
 
 /**
  * Created by peacepassion on 15/11/10.

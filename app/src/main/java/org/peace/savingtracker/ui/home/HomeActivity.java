@@ -1,4 +1,4 @@
-package org.peace.savingtracker.ui;
+package org.peace.savingtracker.ui.home;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +9,9 @@ import butterknife.OnClick;
 import org.peace.savingtracker.BuildConfig;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
+import org.peace.savingtracker.ui.AddExpenseActivity;
+import org.peace.savingtracker.ui.base.BaseActivity;
+import org.peace.savingtracker.ui.history.ExpenseHistoryActivity;
 
 /**
  * Created by peacepassion on 15/10/14.

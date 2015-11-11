@@ -2,6 +2,7 @@ package org.peace.savingtracker.ui;
 
 import android.os.Bundle;
 import org.peace.savingtracker.R;
+import org.peace.savingtracker.ui.base.BaseActivity;
 
 /**
  * Created by peacepassion on 15/10/14.

@@ -1,4 +1,4 @@
-package org.peace.savingtracker.ui;
+package org.peace.savingtracker.ui.base;
 
 import android.content.res.Resources;
 import android.os.Build;

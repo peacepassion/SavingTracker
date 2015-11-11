@@ -1,4 +1,4 @@
-package org.peace.savingtracker.ui;
+package org.peace.savingtracker.ui.history;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +8,7 @@ import io.realm.Realm;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.ExpenseDAO;
 import org.peace.savingtracker.model.ExpenseRealmDAO;
+import org.peace.savingtracker.ui.base.BaseActivity;
 
 /**
  * Created by peacepassion on 15/11/10.

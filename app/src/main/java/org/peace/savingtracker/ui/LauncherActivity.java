@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.orhanobut.hawk.Hawk;
 import org.peace.savingtracker.consts.HawkKeys;
+import org.peace.savingtracker.ui.base.BaseActivity;
+import org.peace.savingtracker.ui.home.HomeActivity;
+import org.peace.savingtracker.ui.login.LoginActivity;
 
 public class LauncherActivity extends BaseActivity {
 

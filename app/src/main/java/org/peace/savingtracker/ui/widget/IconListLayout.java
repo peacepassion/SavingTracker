@@ -1,4 +1,4 @@
-package org.peace.savingtracker.ui;
+package org.peace.savingtracker.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

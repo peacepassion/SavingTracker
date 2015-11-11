@@ -20,6 +20,7 @@ import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.Expense;
 import org.peace.savingtracker.model.ExpenseDAO;
 import org.peace.savingtracker.model.ExpenseRealmDAO;
+import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.utils.ResUtil;
 import rx.Observable;
 import rx.Subscriber;

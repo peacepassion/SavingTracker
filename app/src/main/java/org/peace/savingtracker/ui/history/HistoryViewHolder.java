@@ -1,4 +1,4 @@
-package org.peace.savingtracker.ui;
+package org.peace.savingtracker.ui.history;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
