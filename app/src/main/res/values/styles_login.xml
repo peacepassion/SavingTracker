@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="LoginEditText" parent="@android:style/Widget.EditText">
+    <item name="android:singleLine">true</item>
+  </style>
+</resources>

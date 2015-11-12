@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -121,5 +122,14 @@ import retrofit.Retrofit;
       throw new IllegalStateException("this activity has no tool bar");
     }
     getSupportActionBar().setTitle(title);
+  }
+
+  protected void popHint(String content) {
+    popHint(content, false);
+  }
+
+  protected void popHint(String content, boolean longDuration) {
+    Snackbar.make(root, content, longDuration ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT)
+        .show();
   }
 }

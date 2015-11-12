@@ -6,6 +6,4 @@ package org.peace.savingtracker.consts;
 public interface HawkKeys {
 
   String CURRENT_USER = "current_user";
-
-  String QQ_TOKEN = "qq_token";
 }

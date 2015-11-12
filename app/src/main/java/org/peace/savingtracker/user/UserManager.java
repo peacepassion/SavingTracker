@@ -18,14 +18,6 @@ import org.peace.savingtracker.consts.HawkKeys;
 
   }
 
-  public void qqUserLogin(String openId, String token, String username) {
-    User user = new User();
-    user.setId(openId);
-    user.setUsername(username);
-    login(user);
-    Hawk.put(HawkKeys.QQ_TOKEN, token);
-  }
-
   public void login(User user) {
     currentUser = user;
     Hawk.put(HawkKeys.CURRENT_USER, user);

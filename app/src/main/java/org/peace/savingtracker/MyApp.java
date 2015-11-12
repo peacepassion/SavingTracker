@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import autodagger.AutoComponent;
 import autodagger.AutoInjector;
+import com.avos.avoscloud.AVOSCloud;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
@@ -63,7 +64,11 @@ import retrofit.Retrofit;
 
     ResUtil.init(this);
     SystemUtil.init(this);
+
     Iconify.with(new FontAwesomeModule());
+
+    AVOSCloud.useAVCloudCN();
+    AVOSCloud.initialize(this, "wU2ymMB58FWvLkLAYRTDKt8B", "4uldnECB4QTbWg4lg787cJrA");
   }
 
   public MyAppComponent getAppComponent() {

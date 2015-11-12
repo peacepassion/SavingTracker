@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:id="@+id/parse_login"
+    >
+
+  <EditText
+      android:id="@+id/login_username_input"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/LoginEditText"
+      android:hint="@string/email"
+      />
+
+  <EditText
+      android:id="@+id/login_password_input"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/LoginEditText"
+      android:layout_marginTop="8dp"
+      android:fontFamily="sans-serif"
+      android:hint="@string/password"
+      android:inputType="textPassword"
+      android:selectAllOnFocus="true"
+      />
+
+  <LinearLayout
+      android:id="@+id/parse_buttons"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      >
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="0.5"
+        android:text="@string/login"
+        />
+
+    <Button
+        android:id="@+id/sign_up"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="0.5"
+        android:text="@string/sign_up"
+        />
+  </LinearLayout>
+
+</LinearLayout>

@@ -9,4 +9,14 @@
   <string name="confirm">Confirm</string>
   <string name="view_expense">View Expense History</string>
   <string name="user_center">User Center</string>
+  <string name="email">Email</string>
+  <string name="password">Password</string>
+  <string name="re_enter_password">Re-enter password</string>
+  <string name="name">Name</string>
+  <string name="login">Log in</string>
+  <string name="sign_up">Sign up</string>
+  <string name="error_register_user_name_repeat">用户名已被注册，请重新填写</string>
+  <string name="error_register_email_repeat">邮箱已被注册，请更换邮箱</string>
+  <string name="register_success">注册成功</string>
+  <string name="network_error">网络错误，请检查您的网络连接</string>
 </resources>
