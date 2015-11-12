@@ -10,36 +10,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.FindCallback;
 import java.sql.Date;
 import java.util.List;
+import javax.inject.Inject;
+import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.Expense;
-import org.peace.savingtracker.model.ExpenseDAO;
-import org.peace.savingtracker.model.ExpenseRealmDAO;
+import org.peace.savingtracker.model.ExpenseAPI;
 import org.peace.savingtracker.ui.base.BaseActivity;
+import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.utils.ResUtil;
-import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by peacepassion on 15/11/6.
  */
-public class DBActivity extends BaseActivity {
+@AutoInjector(MyApp.class) public class DBActivity extends BaseActivity {
+
+  @Inject ExpenseAPI expenseAPI;
 
   @Bind(R.id.db_list) RecyclerView dbRecyclerView;
-  DBAdapter dbAdapter;
+  private ProgressDialog progressDialog;
 
-  private Realm realm;
-  private ExpenseDAO expenseDAO;
+  DBAdapter dbAdapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    realm = Realm.getDefaultInstance();
-    expenseDAO = new ExpenseRealmDAO(realm);
+    appComponent.inject(this);
+    progressDialog = new ProgressDialog(this);
     setupDBRecyclerView();
   }
 
@@ -48,14 +51,23 @@ public class DBActivity extends BaseActivity {
   }
 
   @Override protected void onDestroy() {
-    realm.close();
     super.onDestroy();
   }
 
   private void setupDBRecyclerView() {
-    dbAdapter = new DBAdapter(expenseDAO.queryAll());
-    dbRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    dbRecyclerView.setAdapter(dbAdapter);
+    progressDialog.show();
+    expenseAPI.queryAll(new FindCallback<Expense>() {
+      @Override public void done(List<Expense> list, AVException e) {
+        progressDialog.dismiss();
+        if (e != null) {
+          popHint(e.getMessage());
+          return;
+        }
+        dbAdapter = new DBAdapter(list);
+        dbRecyclerView.setLayoutManager(new LinearLayoutManager(DBActivity.this));
+        dbRecyclerView.setAdapter(dbAdapter);
+      }
+    });
   }
 
   @Override protected int getLayoutRes() {
@@ -66,20 +78,19 @@ public class DBActivity extends BaseActivity {
     int id = v.getId();
     switch (id) {
       case R.id.clear_db:
-        ExpenseDAO expenseDAO = new ExpenseRealmDAO(realm);
-        Observable.from(expenseDAO.queryAll()).subscribe(new Subscriber<Expense>() {
-          @Override public void onCompleted() {
-            dbAdapter.updateData(expenseDAO.queryAll());
-          }
-
-          @Override public void onError(Throwable e) {
-
-          }
-
-          @Override public void onNext(Expense expense) {
-            expenseDAO.delete(expense);
-          }
-        });
+        //Observable.from(expenseDAO.queryAll()).subscribe(new Subscriber<Expense>() {
+        //  @Override public void onCompleted() {
+        //    dbAdapter.updateData(expenseDAO.queryAll());
+        //  }
+        //
+        //  @Override public void onError(Throwable e) {
+        //
+        //  }
+        //
+        //  @Override public void onNext(Expense expense) {
+        //    expenseDAO.delete(expense);
+        //  }
+        //});
     }
   }
 
@@ -131,7 +142,7 @@ public class DBActivity extends BaseActivity {
     }
 
     private void onBindContentVH(DBViewHolder holder, Expense contentItem) {
-      holder.idTV.setText(String.valueOf(contentItem.getId()));
+      holder.idTV.setText(String.valueOf(contentItem.getObjectId()));
       holder.userIdTV.setText(contentItem.getUserId());
       holder.nameTV.setText(contentItem.getName());
       holder.dateTV.setText(new Date(contentItem.getDate()).toString());

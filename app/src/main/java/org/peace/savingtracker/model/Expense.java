@@ -1,84 +1,71 @@
 package org.peace.savingtracker.model;
 
-import android.support.annotation.Nullable;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import android.os.Parcelable;
+import com.avos.avoscloud.AVClassName;
+import com.avos.avoscloud.AVObject;
 
 /**
  * Created by peacepassion on 15/11/5.
  */
-public class Expense extends RealmObject {
+@AVClassName("Expense") public class Expense extends AVObject {
 
-  @PrimaryKey private Long id;
+  public static final Parcelable.Creator CREATOR = AVObjectCreator.instance;
 
-  private String userId;
-
-  private String name;
-
-  private long date;
-
-  @Nullable private String category;
-
-  private double value;
+  private static final String USER_ID = "user_id";
+  private static final String USERNAME = "username";
+  private static final String DATE = "date";
+  private static final String CATEGORY = "category";
+  private static final String VALUE = "value";
 
   public Expense() {
 
   }
 
-  public Expense(Long id, String userId, String name, long date, String category, double value) {
-    this.id = id;
-    this.userId = userId;
-    this.name = name;
-    this.date = date;
-    this.category = category;
-    this.value = value;
-  }
-
-  public Long getId() {
-    return id;
+  public Expense(String userId, String name, long date, String category, double value) {
+    setUserId(userId);
+    setName(name);
+    setDate(date);
+    setCategory(category);
+    setValue(value);
   }
 
   public String getUserId() {
-    return userId;
+    return getString(USER_ID);
   }
 
   public String getName() {
-    return name;
+    return getString(USERNAME);
   }
 
   public long getDate() {
-    return date;
+    return getLong(DATE);
   }
 
   public String getCategory() {
-    return category;
+    return getString(CATEGORY);
   }
 
   public double getValue() {
-    return value;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
+    return Double.valueOf(get(VALUE).toString());
   }
 
   public void setUserId(String userId) {
-    this.userId = userId;
+    put(USER_ID, userId);
   }
 
   public void setName(String name) {
-    this.name = name;
+    put(USERNAME, name);
   }
 
   public void setDate(long date) {
-    this.date = date;
+    put(DATE, date);
   }
 
   public void setCategory(String category) {
-    this.category = category;
+    put(CATEGORY, category);
   }
 
   public void setValue(double value) {
-    this.value = value;
+    put(VALUE, value);
   }
 }

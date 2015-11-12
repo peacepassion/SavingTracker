@@ -124,11 +124,11 @@ import retrofit.Retrofit;
     getSupportActionBar().setTitle(title);
   }
 
-  protected void popHint(String content) {
+  public void popHint(String content) {
     popHint(content, false);
   }
 
-  protected void popHint(String content, boolean longDuration) {
+  public void popHint(String content, boolean longDuration) {
     Snackbar.make(root, content, longDuration ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT)
         .show();
   }

@@ -7,32 +7,35 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import autodagger.AutoInjector;
 import butterknife.Bind;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.SaveCallback;
 import com.jakewharton.rxbinding.view.RxView;
-import io.realm.Realm;
+import javax.inject.Inject;
+import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.Expense;
-import org.peace.savingtracker.model.ExpenseDAO;
-import org.peace.savingtracker.model.ExpenseRealmDAO;
+import org.peace.savingtracker.model.ExpenseAPI;
 import org.peace.savingtracker.ui.base.BaseActivity;
+import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.user.User;
 import org.peace.savingtracker.utils.SystemUtil;
 
 /**
  * Created by peacepassion on 15/11/10.
  */
-public class AddExpenseActivity extends BaseActivity {
+@AutoInjector(MyApp.class) public class AddExpenseActivity extends BaseActivity {
+
+  @Inject ExpenseAPI expenseAPI;
 
   @Bind(R.id.expense_amount_et) EditText expenseAmountET;
   @Bind(R.id.expense_category_sp) Spinner expenseCategorySp;
   @Bind(R.id.confirm) Button confirm;
 
-  Realm realm;
-  ExpenseDAO expenseDAO;
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    initDAO();
+    appComponent.inject(this);
     initCategorySpinner();
     initConfirmButton();
     initExpenseAmountET();
@@ -43,13 +46,7 @@ public class AddExpenseActivity extends BaseActivity {
   }
 
   @Override protected void onDestroy() {
-    realm.close();
     super.onDestroy();
-  }
-
-  private void initDAO() {
-    realm = Realm.getDefaultInstance();
-    expenseDAO = new ExpenseRealmDAO(realm);
   }
 
   private void initCategorySpinner() {
@@ -65,10 +62,20 @@ public class AddExpenseActivity extends BaseActivity {
     }).subscribe(viewClickEvent -> {
       double value = Double.valueOf(expenseAmountET.getText().toString());
       User user = userManager.getCurrentUser();
-      Expense obj = new Expense(expenseDAO.getMaxId() + 1, user.getId(), user.getUsername(),
-          System.currentTimeMillis(), (String) expenseCategorySp.getSelectedItem(), value);
-      expenseDAO.insert(obj);
-      finish();
+      Expense obj = new Expense(user.getId(), user.getUsername(), System.currentTimeMillis(),
+          (String) expenseCategorySp.getSelectedItem(), value);
+      ProgressDialog dlg = new ProgressDialog(this);
+      dlg.show();
+      expenseAPI.insert(obj, new SaveCallback() {
+        @Override public void done(AVException e) {
+          dlg.dismiss();
+          if (e != null) {
+            popHint(e.getMessage());
+            return;
+          }
+          finish();
+        }
+      });
     });
   }
 

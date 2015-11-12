@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import autodagger.AutoComponent;
 import autodagger.AutoInjector;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
@@ -15,11 +16,10 @@ import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.HawkBuilder;
 import com.orhanobut.hawk.LogLevel;
 import com.squareup.leakcanary.RefWatcher;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.peace.savingtracker.model.Expense;
 import org.peace.savingtracker.utils.AppLogger;
 import org.peace.savingtracker.utils.ResUtil;
 import org.peace.savingtracker.utils.SystemUtil;
@@ -45,7 +45,6 @@ import retrofit.Retrofit;
     initLogger();
     initHawk();
     initStetho();
-    initRealm();
     initUtils();
     initIconify();
     initLeanCloud();
@@ -58,7 +57,9 @@ import retrofit.Retrofit;
 
   private void initLeanCloud() {
     AVOSCloud.useAVCloudCN();
-    AVOSCloud.initialize(this, getString(R.string.m), "4uldnECB4QTbWg4lg787cJrA");
+    AVOSCloud.initialize(this, "wU2ymMB58FWvLkLAYRTDKt8B", "4uldnECB4QTbWg4lg787cJrA");
+    AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
+    AVObject.registerSubclass(Expense.class);
   }
 
   private void initIconify() {
@@ -68,11 +69,6 @@ import retrofit.Retrofit;
   private void initUtils() {
     ResUtil.init(this);
     SystemUtil.init(this);
-  }
-
-  private void initRealm() {
-    RealmConfiguration configuration = new RealmConfiguration.Builder(this).build();
-    Realm.setDefaultConfiguration(configuration);
   }
 
   private void initStetho() {
