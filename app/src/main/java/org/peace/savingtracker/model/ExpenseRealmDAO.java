@@ -3,7 +3,6 @@ package org.peace.savingtracker.model;
 import io.realm.Realm;
 import java.util.LinkedList;
 import java.util.List;
-import me.ele.commons.AppLogger;
 
 /**
  * Created by peacepassion on 15/11/5.

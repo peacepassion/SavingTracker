@@ -20,7 +20,7 @@ import io.realm.RealmConfiguration;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import me.ele.commons.AppLogger;
+import org.peace.savingtracker.utils.AppLogger;
 import org.peace.savingtracker.utils.ResUtil;
 import org.peace.savingtracker.utils.SystemUtil;
 import org.shikato.infodumper.InfoDumperPlugin;
