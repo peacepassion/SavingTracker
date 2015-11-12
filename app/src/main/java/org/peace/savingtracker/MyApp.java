@@ -41,34 +41,59 @@ import retrofit.Retrofit;
   @Override public void onCreate() {
     super.onCreate();
 
+    initDagger();
+    initLogger();
+    initHawk();
+    initStetho();
+    initRealm();
+    initUtils();
+    initIconify();
+    initLeanCloud();
+  }
+
+  private void initDagger() {
     appComponent = DaggerMyAppComponent.builder().myAppModule(new MyAppModule(this)).build();
     appComponent.inject(this);
+  }
 
-    AppLogger.debug = BuildConfig.DEBUG;
+  private void initLeanCloud() {
+    AVOSCloud.useAVCloudCN();
+    AVOSCloud.initialize(this, getString(R.string.m), "4uldnECB4QTbWg4lg787cJrA");
+  }
 
-    Hawk.init(this)
-        .setEncryptionMethod(HawkBuilder.EncryptionMethod.NO_ENCRYPTION)
-        .setStorage(HawkBuilder.newSharedPrefStorage(this))
-        .setLogLevel(LogLevel.FULL)
-        .build();
+  private void initIconify() {
+    Iconify.with(new FontAwesomeModule());
+  }
 
+  private void initUtils() {
+    ResUtil.init(this);
+    SystemUtil.init(this);
+  }
+
+  private void initRealm() {
+    RealmConfiguration configuration = new RealmConfiguration.Builder(this).build();
+    Realm.setDefaultConfiguration(configuration);
+  }
+
+  private void initStetho() {
     if (BuildConfig.DEBUG) {
       Stetho.initialize(Stetho.newInitializerBuilder(this)
           .enableDumpapp(new MyDumperPluginsProvider(this))
           .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
           .build());
     }
+  }
 
-    RealmConfiguration configuration = new RealmConfiguration.Builder(this).build();
-    Realm.setDefaultConfiguration(configuration);
+  private void initHawk() {
+    Hawk.init(this)
+        .setEncryptionMethod(HawkBuilder.EncryptionMethod.NO_ENCRYPTION)
+        .setStorage(HawkBuilder.newSharedPrefStorage(this))
+        .setLogLevel(LogLevel.FULL)
+        .build();
+  }
 
-    ResUtil.init(this);
-    SystemUtil.init(this);
-
-    Iconify.with(new FontAwesomeModule());
-
-    AVOSCloud.useAVCloudCN();
-    AVOSCloud.initialize(this, "wU2ymMB58FWvLkLAYRTDKt8B", "4uldnECB4QTbWg4lg787cJrA");
+  private void initLogger() {
+    AppLogger.debug = BuildConfig.DEBUG;
   }
 
   public MyAppComponent getAppComponent() {
