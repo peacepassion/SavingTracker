@@ -6,9 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.FindCallback;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +15,9 @@ import org.peace.savingtracker.model.ExpenseAPI;
 import org.peace.savingtracker.model.ExpenseHelper;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by peacepassion on 15/11/10.
@@ -57,18 +57,29 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
       Snackbar.make(viewClickEvent.view(), "not ready yet", Snackbar.LENGTH_SHORT).show();
     });
     RxView.clickEvents(holder.delete).subscribe(viewClickEvent -> {
-      progressDialog.show();
-      expenseAPI.delete(expense, new DeleteCallback() {
-        @Override public void done(AVException e) {
-          progressDialog.dismiss();
-          if (e != null) {
-            ((BaseActivity) context).popHint(e.getMessage());
-            return;
-          }
-          expenses.remove(expense);
-          notifyDataSetChanged();
-        }
-      });
+      expenseAPI.delete(expense)
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(((BaseActivity) context).bindToLifecycle())
+          .subscribe(new Subscriber<Void>() {
+            @Override public void onStart() {
+              progressDialog.show();
+            }
+
+            @Override public void onCompleted() {
+              progressDialog.dismiss();
+            }
+
+            @Override public void onError(Throwable e) {
+              progressDialog.dismiss();
+              ((BaseActivity) context).popHint(e.getMessage());
+            }
+
+            @Override public void onNext(Void aVoid) {
+              expenses.remove(expense);
+              notifyDataSetChanged();
+            }
+          });
     });
   }
 
@@ -77,17 +88,28 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
   }
 
   private void loadData() {
-    progressDialog.show();
-    expenseAPI.queryAll(new FindCallback<Expense>() {
-      @Override public void done(List<Expense> list, AVException e) {
-        progressDialog.dismiss();
-        if (e != null) {
-          ((BaseActivity) context).popHint(e.getMessage());
-          return;
-        }
-        expenses = list;
-        notifyDataSetChanged();
-      }
-    });
+    expenseAPI.queryAll()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(((BaseActivity) context).bindToLifecycle())
+        .subscribe(new Subscriber<List<Expense>>() {
+          @Override public void onStart() {
+            progressDialog.show();
+          }
+
+          @Override public void onCompleted() {
+            progressDialog.dismiss();
+          }
+
+          @Override public void onError(Throwable e) {
+            progressDialog.dismiss();
+            ((BaseActivity) context).popHint(e.getMessage());
+          }
+
+          @Override public void onNext(List<Expense> expenses) {
+            HistoryAdapter.this.expenses = expenses;
+            notifyDataSetChanged();
+          }
+        });
   }
 }

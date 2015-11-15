@@ -14,8 +14,6 @@ import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.FindCallback;
 import java.sql.Date;
 import java.util.List;
 import javax.inject.Inject;
@@ -26,6 +24,9 @@ import org.peace.savingtracker.model.ExpenseAPI;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.utils.ResUtil;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by peacepassion on 15/11/6.
@@ -56,18 +57,30 @@ import org.peace.savingtracker.utils.ResUtil;
 
   private void setupDBRecyclerView() {
     progressDialog.show();
-    expenseAPI.queryAll(new FindCallback<Expense>() {
-      @Override public void done(List<Expense> list, AVException e) {
-        progressDialog.dismiss();
-        if (e != null) {
-          popHint(e.getMessage());
-          return;
-        }
-        dbAdapter = new DBAdapter(list);
-        dbRecyclerView.setLayoutManager(new LinearLayoutManager(DBActivity.this));
-        dbRecyclerView.setAdapter(dbAdapter);
-      }
-    });
+    expenseAPI.queryAll()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindToLifecycle())
+        .subscribe(new Subscriber<List<Expense>>() {
+          @Override public void onStart() {
+            progressDialog.show();
+          }
+
+          @Override public void onCompleted() {
+            progressDialog.dismiss();
+          }
+
+          @Override public void onError(Throwable e) {
+            progressDialog.dismiss();
+            popHint(e.getMessage());
+          }
+
+          @Override public void onNext(List<Expense> expenses) {
+            dbAdapter = new DBAdapter(expenses);
+            dbRecyclerView.setLayoutManager(new LinearLayoutManager(DBActivity.this));
+            dbRecyclerView.setAdapter(dbAdapter);
+          }
+        });
   }
 
   @Override protected int getLayoutRes() {

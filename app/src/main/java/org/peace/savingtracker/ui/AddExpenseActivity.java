@@ -21,6 +21,9 @@ import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.user.User;
 import org.peace.savingtracker.utils.SystemUtil;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by peacepassion on 15/11/10.
@@ -65,17 +68,29 @@ import org.peace.savingtracker.utils.SystemUtil;
       Expense obj = new Expense(user.getId(), user.getUsername(), System.currentTimeMillis(),
           (String) expenseCategorySp.getSelectedItem(), value);
       ProgressDialog dlg = new ProgressDialog(this);
-      dlg.show();
-      expenseAPI.insert(obj, new SaveCallback() {
-        @Override public void done(AVException e) {
-          dlg.dismiss();
-          if (e != null) {
-            popHint(e.getMessage());
-            return;
-          }
-          finish();
-        }
-      });
+      expenseAPI.insert(obj)
+          .subscribeOn(Schedulers.io())
+          .subscribeOn(AndroidSchedulers.mainThread())
+          .compose(bindToLifecycle())
+          .subscribe(new Subscriber<Void>() {
+            @Override public void onStart() {
+              dlg.show();
+            }
+
+            @Override public void onCompleted() {
+              dlg.dismiss();
+              finish();
+            }
+
+            @Override public void onError(Throwable e) {
+              dlg.dismiss();
+              popHint(e.getMessage());
+            }
+
+            @Override public void onNext(Void aVoid) {
+
+            }
+          });
     });
   }
 
