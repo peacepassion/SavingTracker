@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
@@ -57,30 +58,43 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
       Snackbar.make(viewClickEvent.view(), "not ready yet", Snackbar.LENGTH_SHORT).show();
     });
     RxView.clickEvents(holder.delete).subscribe(viewClickEvent -> {
-      expenseAPI.delete(expense)
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(((BaseActivity) context).bindToLifecycle())
-          .subscribe(new Subscriber<Void>() {
-            @Override public void onStart() {
-              progressDialog.show();
-            }
-
-            @Override public void onCompleted() {
-              progressDialog.dismiss();
-            }
-
-            @Override public void onError(Throwable e) {
-              progressDialog.dismiss();
-              ((BaseActivity) context).popHint(e.getMessage());
-            }
-
-            @Override public void onNext(Void aVoid) {
-              expenses.remove(expense);
-              notifyDataSetChanged();
-            }
-          });
+      alertDelete(expense);
     });
+  }
+
+  private void alertDelete(Expense expense) {
+    new MaterialDialog.Builder(context).title("确定删除")
+        .content("确定删除该笔账单?")
+        .positiveText("确定")
+        .negativeText("取消")
+        .callback(new MaterialDialog.ButtonCallback() {
+          @Override public void onPositive(MaterialDialog dialog) {
+            expenseAPI.delete(expense)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(((BaseActivity) context).bindToLifecycle())
+                .subscribe(new Subscriber<Void>() {
+                  @Override public void onStart() {
+                    progressDialog.show();
+                  }
+
+                  @Override public void onCompleted() {
+                    progressDialog.dismiss();
+                  }
+
+                  @Override public void onError(Throwable e) {
+                    progressDialog.dismiss();
+                    ((BaseActivity) context).popHint(e.getMessage());
+                  }
+
+                  @Override public void onNext(Void aVoid) {
+                    expenses.remove(expense);
+                    notifyDataSetChanged();
+                  }
+                });
+          }
+        })
+        .show();
   }
 
   @Override public int getItemCount() {
