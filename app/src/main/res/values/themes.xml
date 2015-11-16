@@ -16,7 +16,8 @@
     <item name="android:windowAnimationStyle">@style/STTransitionAnim</item>
   </style>
 
-  <style name="STSplashTheme" parent="STBaseTheme">
+  <style name="STSplashTheme"
+      parent="STBaseTheme">
   </style>
 
   <style name="ToolBarTheme"
@@ -33,5 +34,5 @@
     <item name="android:activityOpenEnterAnimation">@anim/left_in</item>
     <item name="android:activityCloseExitAnimation">@anim/right_out</item>
   </style>
-
+  
 </resources>
