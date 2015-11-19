@@ -8,6 +8,7 @@ import butterknife.OnClick;
 import org.peace.savingtracker.BuildConfig;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.ui.AddExpenseActivity;
+import org.peace.savingtracker.ui.accountbook.AddAccountBookActivity;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.history.ExpenseHistoryActivity;
 import org.peace.savingtracker.ui.user.UserActivity;
@@ -23,7 +24,7 @@ public class HomeActivity extends BaseActivity {
     attachDebugDrawer();
   }
 
-  @OnClick({ R.id.add_expense, R.id.view_expense_history, R.id.user_center })
+  @OnClick({ R.id.add_expense, R.id.view_expense_history, R.id.user_center, R.id.add_account_book })
   public void onClick(View v) {
     int id = v.getId();
     switch (id) {
@@ -35,6 +36,9 @@ public class HomeActivity extends BaseActivity {
         break;
       case R.id.user_center:
         startActivity(new Intent(this, UserActivity.class));
+        break;
+      case R.id.add_account_book:
+        startActivity(new Intent(this, AddAccountBookActivity.class));
         break;
       default:
         break;
