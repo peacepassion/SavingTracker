@@ -68,4 +68,8 @@ public class HomeActivity extends BaseActivity {
   @Override protected boolean allowActionUp() {
     return false;
   }
+
+  @Override protected boolean needLogin() {
+    return true;
+  }
 }

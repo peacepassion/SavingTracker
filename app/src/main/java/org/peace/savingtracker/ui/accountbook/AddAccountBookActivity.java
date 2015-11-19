@@ -94,4 +94,8 @@ public class AddAccountBookActivity extends BaseActivity {
   @Override protected int getLayoutRes() {
     return R.layout.activity_add_account_book;
   }
+
+  @Override protected boolean needLogin() {
+    return true;
+  }
 }

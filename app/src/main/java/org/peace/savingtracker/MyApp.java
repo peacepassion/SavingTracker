@@ -19,6 +19,7 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.peace.savingtracker.model.AccountBook;
 import org.peace.savingtracker.model.Expense;
 import org.peace.savingtracker.utils.AppLogger;
 import org.peace.savingtracker.utils.ResUtil;
@@ -60,6 +61,7 @@ import retrofit.Retrofit;
     AVOSCloud.initialize(this, "wU2ymMB58FWvLkLAYRTDKt8B", "4uldnECB4QTbWg4lg787cJrA");
     AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
     AVObject.registerSubclass(Expense.class);
+    AVObject.registerSubclass(AccountBook.class);
   }
 
   private void initIconify() {
