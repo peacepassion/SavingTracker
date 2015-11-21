@@ -8,7 +8,7 @@ import butterknife.Bind;
 import javax.inject.Inject;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
-import org.peace.savingtracker.model.ExpenseAPI;
+import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.ui.base.BaseActivity;
 
 /**
@@ -16,7 +16,7 @@ import org.peace.savingtracker.ui.base.BaseActivity;
  */
 @AutoInjector(MyApp.class) public class ExpenseHistoryActivity extends BaseActivity {
 
-  @Inject ExpenseAPI expenseAPI;
+  @Inject AVCloudAPI AVCloudAPI;
 
   @Bind(R.id.expense_history_list) RecyclerView historyRV;
 
@@ -37,7 +37,7 @@ import org.peace.savingtracker.ui.base.BaseActivity;
   }
 
   private void initHistoryRV() {
-    adapter = new HistoryAdapter(this, expenseAPI);
+    adapter = new HistoryAdapter(this, AVCloudAPI);
     historyRV.setLayoutManager(new LinearLayoutManager(this));
     historyRV.setAdapter(adapter);
   }

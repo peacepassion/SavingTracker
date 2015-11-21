@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.Expense;
-import org.peace.savingtracker.model.ExpenseAPI;
+import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.utils.ResUtil;
@@ -33,7 +33,7 @@ import rx.schedulers.Schedulers;
  */
 @AutoInjector(MyApp.class) public class DBActivity extends BaseActivity {
 
-  @Inject ExpenseAPI expenseAPI;
+  @Inject AVCloudAPI AVCloudAPI;
 
   @Bind(R.id.db_list) RecyclerView dbRecyclerView;
   private ProgressDialog progressDialog;
@@ -57,7 +57,7 @@ import rx.schedulers.Schedulers;
 
   private void setupDBRecyclerView() {
     progressDialog.show();
-    expenseAPI.queryAll()
+    AVCloudAPI.queryAll(Expense.class)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindToLifecycle())

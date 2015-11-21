@@ -11,8 +11,8 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
 import org.peace.savingtracker.R;
+import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.Expense;
-import org.peace.savingtracker.model.ExpenseAPI;
 import org.peace.savingtracker.model.ExpenseHelper;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
@@ -26,13 +26,13 @@ import rx.schedulers.Schedulers;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
   private Context context;
-  private ExpenseAPI expenseAPI;
+  private AVCloudAPI AVCloudAPI;
   private List<Expense> expenses;
   private ProgressDialog progressDialog;
 
-  public HistoryAdapter(Context context, ExpenseAPI expenseAPI) {
+  public HistoryAdapter(Context context, AVCloudAPI AVCloudAPI) {
     this.context = context;
-    this.expenseAPI = expenseAPI;
+    this.AVCloudAPI = AVCloudAPI;
     progressDialog = new ProgressDialog(context);
     expenses = Collections.emptyList();
     loadData();
@@ -69,7 +69,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
         .negativeText("取消")
         .callback(new MaterialDialog.ButtonCallback() {
           @Override public void onPositive(MaterialDialog dialog) {
-            expenseAPI.delete(expense)
+            AVCloudAPI.delete(expense)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(((BaseActivity) context).bindToLifecycle())
@@ -102,7 +102,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
   }
 
   private void loadData() {
-    expenseAPI.queryAll()
+    AVCloudAPI.queryAll(Expense.class)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(((BaseActivity) context).bindToLifecycle())

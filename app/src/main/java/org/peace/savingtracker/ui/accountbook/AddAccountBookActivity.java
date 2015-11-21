@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import autodagger.AutoInjector;
 import butterknife.Bind;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.SaveCallback;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
+import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
+import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.AccountBook;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
@@ -20,7 +24,9 @@ import rx.schedulers.Schedulers;
 /**
  * Created by peacepassion on 15/11/19.
  */
-public class AddAccountBookActivity extends BaseActivity {
+@AutoInjector(MyApp.class) public class AddAccountBookActivity extends BaseActivity {
+
+  @Inject AVCloudAPI aVCloudAPI;
 
   @Bind(R.id.name) EditText accountBookNameET;
   @Bind(R.id.description) EditText accountBookDesET;
@@ -28,6 +34,7 @@ public class AddAccountBookActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    appComponent.inject(this);
     setTitle(getString(R.string.add_account));
     initConfirmBtn();
   }
@@ -46,24 +53,11 @@ public class AddAccountBookActivity extends BaseActivity {
       }
       return true;
     }).subscribe(viewClickEvent -> {
-      Observable.create(new Observable.OnSubscribe<Void>() {
-        @Override public void call(Subscriber<? super Void> subscriber) {
-          AccountBook book = new AccountBook();
-          book.setName(accountBookNameET.getEditableText().toString());
-          book.setDescription(accountBookDesET.getEditableText().toString());
-          book.setOwner(userManager.getCurrentUser().getId());
-          book.saveEventually(new SaveCallback() {
-            @Override public void done(AVException e) {
-              if (e != null) {
-                subscriber.onError(e);
-                return;
-              }
-              subscriber.onNext(null);
-              subscriber.onCompleted();
-            }
-          });
-        }
-      })
+      AccountBook book = new AccountBook();
+      book.setName(accountBookNameET.getEditableText().toString());
+      book.setDescription(accountBookDesET.getEditableText().toString());
+      book.setOwner(userManager.getCurrentUser().getId());
+      aVCloudAPI.insert(book)
           .compose(bindToLifecycle())
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())

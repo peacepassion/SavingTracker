@@ -9,14 +9,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import autodagger.AutoInjector;
 import butterknife.Bind;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.SaveCallback;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
+import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.Expense;
-import org.peace.savingtracker.model.ExpenseAPI;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.user.User;
@@ -30,7 +28,7 @@ import rx.schedulers.Schedulers;
  */
 @AutoInjector(MyApp.class) public class AddExpenseActivity extends BaseActivity {
 
-  @Inject ExpenseAPI expenseAPI;
+  @Inject AVCloudAPI AVCloudAPI;
 
   @Bind(R.id.expense_amount_et) EditText expenseAmountET;
   @Bind(R.id.expense_category_sp) Spinner expenseCategorySp;
@@ -68,7 +66,7 @@ import rx.schedulers.Schedulers;
       Expense obj = new Expense(user.getId(), user.getUsername(), System.currentTimeMillis(),
           (String) expenseCategorySp.getSelectedItem(), value);
       ProgressDialog dlg = new ProgressDialog(this);
-      expenseAPI.insert(obj)
+      AVCloudAPI.insert(obj)
           .subscribeOn(Schedulers.io())
           .subscribeOn(AndroidSchedulers.mainThread())
           .compose(bindToLifecycle())

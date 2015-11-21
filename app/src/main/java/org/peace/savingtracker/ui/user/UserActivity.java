@@ -8,18 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.FindCallback;
 import java.util.LinkedList;
 import java.util.List;
+import javax.inject.Inject;
+import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
+import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.AccountBook;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -27,7 +27,9 @@ import rx.schedulers.Schedulers;
 /**
  * Created by peacepassion on 15/11/11.
  */
-public class UserActivity extends BaseActivity {
+@AutoInjector(MyApp.class) public class UserActivity extends BaseActivity {
+
+  @Inject AVCloudAPI avCloudAPI;
 
   @Bind(R.id.user_id) TextView userIdTV;
   @Bind(R.id.username) TextView userNameTV;
@@ -37,6 +39,7 @@ public class UserActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    appComponent.inject(this);
     initUI();
   }
 
@@ -50,22 +53,7 @@ public class UserActivity extends BaseActivity {
     accountBookList.setLayoutManager(new LinearLayoutManager(this));
     adapter = new AccountBookAdapter(this);
     accountBookList.setAdapter(adapter);
-    Observable.create(new Observable.OnSubscribe<List<AccountBook>>() {
-      @Override public void call(Subscriber<? super List<AccountBook>> subscriber) {
-        AVQuery<AccountBook> query = AVQuery.getQuery(AccountBook.class);
-        query.whereEqualTo(AccountBook.OWNER, userManager.getCurrentUser().getId());
-        query.findInBackground(new FindCallback<AccountBook>() {
-          @Override public void done(List<AccountBook> list, AVException e) {
-            if (e != null) {
-              subscriber.onError(e);
-              return;
-            }
-            subscriber.onNext(list);
-            subscriber.onCompleted();
-          }
-        });
-      }
-    })
+    avCloudAPI.query(AccountBook.class, AccountBook.OWNER, userManager.getCurrentUser().getId())
         .compose(bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
