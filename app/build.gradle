@@ -6,14 +6,20 @@ buildscript {
     classpath 'com.android.tools.build:gradle:1.2.3'
     classpath 'me.tatarka:gradle-retrolambda:3.2.0'
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    classpath 'com.github.xfumihiro.view-inspector:view-inspector-plugin:0.2.0'
   }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'view-inspector'
 
 repositories {
   jcenter()
+}
+
+viewInspector {
+  excludePackages = ['android.widget.Space', 'com.squareup.leakcanary.internal']
 }
 
 android {
