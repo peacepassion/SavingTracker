@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="@dimen/activity_vertical_margin"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -49,6 +50,14 @@
           style="@style/ColumnEdit"
           />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/account_book"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center_vertical|left"
+        tools:text="选择账本"
+        />
 
     <Button
         android:id="@+id/confirm"

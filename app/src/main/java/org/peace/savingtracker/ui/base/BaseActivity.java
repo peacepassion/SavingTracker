@@ -17,6 +17,7 @@ import autodagger.AutoInjector;
 import butterknife.ButterKnife;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import de.greenrobot.event.EventBus;
 import javax.inject.Inject;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.MyAppComponent;
@@ -34,12 +35,15 @@ import retrofit.Retrofit;
 
   protected LinearLayout root;
   protected MyAppComponent appComponent;
+  protected EventBus eventBus;
 
   @Inject protected Retrofit retrofit;
   @Inject protected UserManager userManager;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    eventBus = EventBus.getDefault();
+    eventBus.register(this);
     appComponent = ((MyApp) getApplicationContext()).getAppComponent();
     appComponent.inject(this);
     if (needLogin() && !userManager.isLogged()) {
@@ -48,6 +52,11 @@ import retrofit.Retrofit;
       return;
     }
     initLayout();
+  }
+
+  @Override protected void onDestroy() {
+    eventBus.unregister(this);
+    super.onDestroy();
   }
 
   private void initLayout() {
@@ -124,6 +133,10 @@ import retrofit.Retrofit;
     getSupportActionBar().setTitle(title);
   }
 
+  public MyAppComponent getAppComponent() {
+    return appComponent;
+  }
+
   public void popHint(String content) {
     popHint(content, false);
   }
@@ -131,5 +144,13 @@ import retrofit.Retrofit;
   public void popHint(String content, boolean longDuration) {
     Snackbar.make(root, content, longDuration ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT)
         .show();
+  }
+
+  public void onEvent(FakeEvent e) {
+
+  }
+
+  private static class FakeEvent {
+
   }
 }

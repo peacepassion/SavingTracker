@@ -14,6 +14,7 @@
   <string name="re_enter_password">Re-enter password</string>
   <string name="name">Name</string>
   <string name="login">Log in</string>
+  <string name="logout">Log out</string>
   <string name="sign_up">Sign up</string>
   <string name="error_register_user_name_repeat">用户名已被注册，请重新填写</string>
   <string name="error_register_email_repeat">邮箱已被注册，请更换邮箱</string>
@@ -22,4 +23,6 @@
   <string name="add_account">Add Account Book</string>
   <string name="account_book_name">Account book name</string>
   <string name="account_book_des">Account book description</string>
+  <string name="selected_account_book">Selected Account Book: %s</string>
+  <string name="select_account_book">Select Account Book</string>
 </resources>

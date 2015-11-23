@@ -1,12 +1,13 @@
 package org.peace.savingtracker.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import autodagger.AutoInjector;
 import butterknife.Bind;
 import com.jakewharton.rxbinding.view.RxView;
@@ -14,10 +15,13 @@ import javax.inject.Inject;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.AVCloudAPI;
+import org.peace.savingtracker.model.AccountBook;
 import org.peace.savingtracker.model.Expense;
+import org.peace.savingtracker.ui.accountbook.SelectAccountBookActivity;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.user.User;
+import org.peace.savingtracker.user.UserManager;
 import org.peace.savingtracker.utils.SystemUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -33,6 +37,7 @@ import rx.schedulers.Schedulers;
   @Bind(R.id.expense_amount_et) EditText expenseAmountET;
   @Bind(R.id.expense_category_sp) Spinner expenseCategorySp;
   @Bind(R.id.confirm) Button confirm;
+  @Bind(R.id.account_book) TextView accountBookTV;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -40,6 +45,7 @@ import rx.schedulers.Schedulers;
     initCategorySpinner();
     initConfirmButton();
     initExpenseAmountET();
+    setAccountBookTV();
   }
 
   @Override protected boolean needLogin() {
@@ -63,8 +69,9 @@ import rx.schedulers.Schedulers;
     }).subscribe(viewClickEvent -> {
       double value = Double.valueOf(expenseAmountET.getText().toString());
       User user = userManager.getCurrentUser();
-      Expense obj = new Expense(user.getId(), user.getUsername(), System.currentTimeMillis(),
-          (String) expenseCategorySp.getSelectedItem(), value);
+      Expense obj = new Expense(user.getObjectId(), user.getUsername(), System.currentTimeMillis(),
+          (String) expenseCategorySp.getSelectedItem(), value,
+          userManager.getCurrentBook().getObjectId());
       ProgressDialog dlg = new ProgressDialog(this);
       AVCloudAPI.insert(obj)
           .subscribeOn(Schedulers.io())
@@ -92,6 +99,18 @@ import rx.schedulers.Schedulers;
     });
   }
 
+  private void setAccountBookTV() {
+    AccountBook accountBook = userManager.getCurrentBook();
+    if (accountBook == null) {
+      accountBookTV.setText("Please select one account book.");
+    } else {
+      accountBookTV.setText(
+          getResources().getString(R.string.selected_account_book, accountBook.getName()));
+    }
+    accountBookTV.setOnClickListener(
+        v -> startActivity(new Intent(AddExpenseActivity.this, SelectAccountBookActivity.class)));
+  }
+
   private void initExpenseAmountET() {
     RxView.focusChangeEvents(expenseAmountET).subscribe(viewFocusChangeEvent -> {
       if (!viewFocusChangeEvent.hasFocus()) {
@@ -104,6 +123,10 @@ import rx.schedulers.Schedulers;
     return R.layout.activity_add_expense;
   }
 
+  public void onEvent(UserManager.CurrentAccountBookChangeEvent event) {
+    setAccountBookTV();
+  }
+
   private class InputValidator {
     boolean validate() {
       return validateAmount();
@@ -111,17 +134,18 @@ import rx.schedulers.Schedulers;
 
     private boolean validateAmount() {
       if (TextUtils.isEmpty(expenseAmountET.getText())) {
-        Snackbar.make(getWindow().getDecorView(), "Expense amount cannot be empty.",
-            Snackbar.LENGTH_SHORT).show();
+        popHint("Expense amount cannot be empty.");
         return false;
       }
       String content = expenseAmountET.getText().toString();
       try {
         Float.valueOf(content);
       } catch (Exception e) {
-        Snackbar snackbar = Snackbar.make(expenseAmountET, "Expense amount must be a valid number.",
-            Snackbar.LENGTH_SHORT);
-        snackbar.show();
+        popHint("Expense amount must be a valid number.");
+        return false;
+      }
+      if (userManager.getCurrentBook() == null) {
+        popHint("You have to select target account book.");
         return false;
       }
       return true;

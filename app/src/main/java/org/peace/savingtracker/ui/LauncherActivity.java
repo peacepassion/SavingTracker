@@ -13,9 +13,7 @@ public class LauncherActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    User user = Hawk.get(HawkKeys.CURRENT_USER, null);
-    if (user != null) {
-      userManager.login(user);
+    if (userManager.getCurrentUser() != null) {
       startActivity(new Intent(this, HomeActivity.class));
     } else {
       startActivity(new Intent(this, LoginActivity.class));

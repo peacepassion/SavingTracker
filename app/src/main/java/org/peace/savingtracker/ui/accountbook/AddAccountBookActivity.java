@@ -6,8 +6,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import autodagger.AutoInjector;
 import butterknife.Bind;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.SaveCallback;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import org.peace.savingtracker.MyApp;
@@ -16,7 +14,6 @@ import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.AccountBook;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -56,7 +53,7 @@ import rx.schedulers.Schedulers;
       AccountBook book = new AccountBook();
       book.setName(accountBookNameET.getEditableText().toString());
       book.setDescription(accountBookDesET.getEditableText().toString());
-      book.setOwner(userManager.getCurrentUser().getId());
+      book.setOwner(userManager.getCurrentUser().getObjectId());
       aVCloudAPI.insert(book)
           .compose(bindToLifecycle())
           .subscribeOn(Schedulers.io())

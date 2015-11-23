@@ -9,6 +9,7 @@ import org.peace.savingtracker.BuildConfig;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.ui.AddExpenseActivity;
 import org.peace.savingtracker.ui.accountbook.AddAccountBookActivity;
+import org.peace.savingtracker.ui.accountbook.SelectAccountBookActivity;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.history.ExpenseHistoryActivity;
 import org.peace.savingtracker.ui.user.UserActivity;
@@ -24,8 +25,10 @@ public class HomeActivity extends BaseActivity {
     attachDebugDrawer();
   }
 
-  @OnClick({ R.id.add_expense, R.id.view_expense_history, R.id.user_center, R.id.add_account_book })
-  public void onClick(View v) {
+  @OnClick({
+      R.id.add_expense, R.id.view_expense_history, R.id.user_center, R.id.add_account_book,
+      R.id.select_account_book
+  }) public void onClick(View v) {
     int id = v.getId();
     switch (id) {
       case R.id.add_expense:
@@ -39,6 +42,9 @@ public class HomeActivity extends BaseActivity {
         break;
       case R.id.add_account_book:
         startActivity(new Intent(this, AddAccountBookActivity.class));
+        break;
+      case R.id.select_account_book:
+        startActivity(new Intent(this, SelectAccountBookActivity.class));
         break;
       default:
         break;

@@ -3,10 +3,12 @@ package org.peace.savingtracker;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import autodagger.AutoComponent;
 import autodagger.AutoInjector;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
@@ -19,8 +21,11 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.peace.savingtracker.consts.HawkKeys;
 import org.peace.savingtracker.model.AccountBook;
 import org.peace.savingtracker.model.Expense;
+import org.peace.savingtracker.user.User;
+import org.peace.savingtracker.user.UserManager;
 import org.peace.savingtracker.utils.AppLogger;
 import org.peace.savingtracker.utils.ResUtil;
 import org.peace.savingtracker.utils.SystemUtil;
@@ -37,6 +42,8 @@ import retrofit.Retrofit;
 
   @Nullable @Inject RefWatcher refWatcher;
 
+  @Inject UserManager userManager;
+
   private MyAppComponent appComponent;
 
   @Override public void onCreate() {
@@ -49,6 +56,7 @@ import retrofit.Retrofit;
     initUtils();
     initIconify();
     initLeanCloud();
+    initUserInfo();
   }
 
   private void initDagger() {
@@ -62,6 +70,7 @@ import retrofit.Retrofit;
     AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
     AVObject.registerSubclass(Expense.class);
     AVObject.registerSubclass(AccountBook.class);
+    AVUser.registerSubclass(User.class);
   }
 
   private void initIconify() {
@@ -88,6 +97,21 @@ import retrofit.Retrofit;
         .setStorage(HawkBuilder.newSharedPrefStorage(this))
         .setLogLevel(LogLevel.FULL)
         .build();
+  }
+
+  private void initUserInfo() {
+    User user = Hawk.get(HawkKeys.CURRENT_USER, null);
+    if (user != null) {
+      userManager.setCurrentUser(user);
+    }
+    String id = Hawk.get(HawkKeys.CURRENT_ACCOUNT_BOOK_ID, null);
+    String name = Hawk.get(HawkKeys.CURRENT_ACCOUNT_BOOK_NAME, null);
+    if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(name)) {
+      AccountBook accountBook = new AccountBook();
+      accountBook.setObjectId(id);
+      accountBook.setName(name);
+      userManager.setCurrentAccountBook(accountBook);
+    }
   }
 
   private void initLogger() {

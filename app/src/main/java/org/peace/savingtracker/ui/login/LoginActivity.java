@@ -60,19 +60,18 @@ public class LoginActivity extends BaseActivity {
     ProgressDialog dlg = new ProgressDialog(this, "正在登录...");
     dlg.show();
     AVUser.logInInBackground(usernameET.getText().toString(), passwordET.getText().toString(),
-        new LogInCallback<AVUser>() {
-          @Override public void done(AVUser avUser, AVException e) {
+        new LogInCallback<User>() {
+          @Override public void done(User user, AVException e) {
             dlg.dismiss();
-            if (avUser == null) {
+            if (user == null) {
               popHint(e.getMessage(), true);
               return;
             }
-            User user = new User(avUser);
-            userManager.login(user);
+            userManager.setCurrentUser(user);
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
           }
-        });
+        }, User.class);
   }
 
   private boolean validate() {

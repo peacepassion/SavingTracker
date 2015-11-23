@@ -1,6 +1,7 @@
 package org.peace.savingtracker.ui.user;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
@@ -19,6 +21,7 @@ import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.AccountBook;
 import org.peace.savingtracker.ui.base.BaseActivity;
+import org.peace.savingtracker.ui.login.LoginActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -40,20 +43,16 @@ import rx.schedulers.Schedulers;
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     appComponent.inject(this);
-    initUI();
-  }
-
-  private void initUI() {
-    userIdTV.setText("user_id: " + userManager.getCurrentUser().getId());
-    userNameTV.setText("username: " + userManager.getCurrentUser().getUsername());
-    initAccountBookList();
-  }
-
-  private void initAccountBookList() {
     accountBookList.setLayoutManager(new LinearLayoutManager(this));
     adapter = new AccountBookAdapter(this);
     accountBookList.setAdapter(adapter);
-    avCloudAPI.query(AccountBook.class, AccountBook.OWNER, userManager.getCurrentUser().getId())
+    requestUserInfo();
+  }
+
+  private void requestUserInfo() {
+    userManager.syncCurrentUser()
+        .flatMap(user -> avCloudAPI.query(AccountBook.class, AccountBook.OWNER,
+            userManager.getCurrentUser().getObjectId()))
         .compose(bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -74,9 +73,21 @@ import rx.schedulers.Schedulers;
           }
 
           @Override public void onNext(List<AccountBook> accountBooks) {
+            userIdTV.setText("user_id: " + userManager.getCurrentUser().getObjectId());
+            userNameTV.setText("username: " + userManager.getCurrentUser().getUsername());
             adapter.setBooks(accountBooks);
           }
         });
+  }
+
+  @OnClick(R.id.logout) public void onClick(View v) {
+    int id = v.getId();
+    if (id == R.id.logout) {
+      userManager.logout();
+      Intent intent = new Intent(this, LoginActivity.class);
+      intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(intent);
+    }
   }
 
   @Override protected int getLayoutRes() {

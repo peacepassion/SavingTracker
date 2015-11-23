@@ -29,4 +29,10 @@
       style="@style/HomeButton"
       />
 
+  <Button
+      android:id="@+id/select_account_book"
+      android:text="@string/select_account_book"
+      style="@style/HomeButton"
+      />
+
 </LinearLayout>

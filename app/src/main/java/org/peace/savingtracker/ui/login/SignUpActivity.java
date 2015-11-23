@@ -62,7 +62,7 @@ public class SignUpActivity extends BaseActivity {
         dlg.dismiss();
         if (e == null) {
           popHint(ResUtil.getString(R.string.register_success));
-          userManager.login(user);
+          userManager.setCurrentUser(user);
           setResult(RESULT_OK);
           startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
           finish();
