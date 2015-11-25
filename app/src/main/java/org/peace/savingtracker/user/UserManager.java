@@ -72,6 +72,9 @@ import rx.functions.Func1;
         AVQuery<User> query = AVQuery.getQuery(User.class);
         query.getInBackground(currentUser.getObjectId(), new GetCallback<User>() {
           @Override public void done(User user, AVException e) {
+            if (subscriber.isUnsubscribed()) {
+              return;
+            }
             if (e != null) {
               subscriber.onError(e);
               return;

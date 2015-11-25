@@ -28,6 +28,9 @@ import rx.Subscriber;
       @Override public void call(Subscriber<? super Void> subscriber) {
         obj.saveEventually(new SaveCallback() {
           @Override public void done(AVException e) {
+            if (subscriber.isUnsubscribed()) {
+              return;
+            }
             if (e == null) {
               subscriber.onNext(null);
               subscriber.onCompleted();
@@ -49,6 +52,9 @@ import rx.Subscriber;
       @Override public void call(Subscriber<? super Void> subscriber) {
         obj.deleteEventually(new DeleteCallback() {
           @Override public void done(AVException e) {
+            if (subscriber.isUnsubscribed()) {
+              return;
+            }
             if (e == null) {
               subscriber.onNext(null);
               subscriber.onCompleted();
@@ -69,6 +75,9 @@ import rx.Subscriber;
         try {
           query.findInBackground(new FindCallback<T>() {
             @Override public void done(List<T> list, AVException e) {
+              if (subscriber.isUnsubscribed()) {
+                return;
+              }
               if (e != null) {
                 subscriber.onError(e);
                 return;
@@ -91,6 +100,9 @@ import rx.Subscriber;
         try {
           query.findInBackground(new FindCallback<T>() {
             @Override public void done(List<T> list, AVException e) {
+              if (subscriber.isUnsubscribed()) {
+                return;
+              }
               if (e != null) {
                 subscriber.onError(e);
                 return;
