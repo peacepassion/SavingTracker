@@ -9,6 +9,16 @@
   <string name="confirm">Confirm</string>
   <string name="view_expense">View Expense History</string>
   <string name="user_center">User Center</string>
+  <string name="message_center">Message Center</string>
+  <string name="search_user">Search User</string>
+  <string name="invite_friend">邀请添加好友</string>
+  <string name="add_friend_invitation_sent">好友申请已发出</string>
+  <string name="add_friend_succ">添加好友成功</string>
+  <string name="add_friend_fail">添加好友被拒绝</string>
+  <string name="accept_invitation">接受邀请</string>
+  <string name="reject_invitation">拒绝邀请</string>
+  <string name="reject_invitation_succ">拒绝成功</string>
+  <string name="receive_add_friend_invitation">收到添加好友的申请,来自: %s</string>
   <string name="email">Email</string>
   <string name="password">Password</string>
   <string name="re_enter_password">Re-enter password</string>

@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.peace.savingtracker.consts.HawkKeys;
 import org.peace.savingtracker.model.AccountBook;
+import org.peace.savingtracker.model.AddFriendRequest;
 import org.peace.savingtracker.model.Expense;
 import org.peace.savingtracker.user.User;
 import org.peace.savingtracker.user.UserManager;
@@ -70,6 +71,8 @@ import retrofit.Retrofit;
     AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
     AVObject.registerSubclass(Expense.class);
     AVObject.registerSubclass(AccountBook.class);
+    AVObject.registerSubclass(AddFriendRequest.class);
+    AVUser.alwaysUseSubUserClass(User.class);
     AVUser.registerSubclass(User.class);
   }
 

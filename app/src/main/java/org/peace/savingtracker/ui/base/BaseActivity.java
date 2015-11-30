@@ -23,6 +23,7 @@ import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.MyAppComponent;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.base.dagger.ActivityScope;
+import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.ui.login.LoginActivity;
 import org.peace.savingtracker.user.UserManager;
 import retrofit.Retrofit;
@@ -39,6 +40,7 @@ import retrofit.Retrofit;
 
   @Inject protected Retrofit retrofit;
   @Inject protected UserManager userManager;
+  @Inject protected AVCloudAPI cloudAPI;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

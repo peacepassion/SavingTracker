@@ -51,7 +51,7 @@ import rx.schedulers.Schedulers;
 
   private void requestUserInfo() {
     userManager.syncCurrentUser()
-        .flatMap(user -> avCloudAPI.query(AccountBook.class, AccountBook.OWNER,
+        .flatMap(user -> avCloudAPI.queryIs(AccountBook.class, AccountBook.OWNER,
             userManager.getCurrentUser().getObjectId()))
         .compose(bindToLifecycle())
         .subscribeOn(Schedulers.io())

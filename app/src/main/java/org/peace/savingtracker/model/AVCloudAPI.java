@@ -67,7 +67,7 @@ import rx.Subscriber;
     });
   }
 
-  public <T extends AVObject> Observable<List<T>> query(Class<T> clazz, String key, Object target) {
+  public <T extends AVObject> Observable<List<T>> queryIs(Class<T> clazz, String key, Object target) {
     return Observable.create(new Observable.OnSubscribe<List<T>>() {
       @Override public void call(Subscriber<? super List<T>> subscriber) {
         AVQuery<T> query = AVQuery.getQuery(clazz);
@@ -89,6 +89,28 @@ import rx.Subscriber;
         } catch (Exception e) {
           subscriber.onError(e);
         }
+      }
+    });
+  }
+
+  public <T extends AVObject> Observable<List<T>> queryContains(Class<T> clazz, String key, String subString) {
+    return Observable.create(new Observable.OnSubscribe<List<T>>() {
+      @Override public void call(Subscriber<? super List<T>> subscriber) {
+        AVQuery<T> query = AVQuery.getQuery(clazz);
+        query.whereContains(key, subString);
+        query.findInBackground(new FindCallback<T>() {
+          @Override public void done(List<T> list, AVException e) {
+            if (subscriber.isUnsubscribed()) {
+              return;
+            }
+            if (e != null) {
+              subscriber.onError(e);
+              return;
+            }
+            subscriber.onNext(list);
+            subscriber.onCompleted();
+          }
+        });
       }
     });
   }

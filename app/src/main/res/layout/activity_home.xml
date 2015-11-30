@@ -24,6 +24,18 @@
       />
 
   <Button
+      android:id="@+id/message_center"
+      android:text="@string/message_center"
+      style="@style/HomeButton"
+      />
+
+  <Button
+      android:id="@+id/search_user"
+      android:text="@string/search_user"
+      style="@style/HomeButton"
+      />
+
+  <Button
       android:id="@+id/add_account_book"
       android:text="@string/add_account"
       style="@style/HomeButton"
