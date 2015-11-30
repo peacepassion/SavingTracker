@@ -100,10 +100,6 @@ import retrofit.Retrofit;
   }
 
   private void initUserInfo() {
-    User user = Hawk.get(HawkKeys.CURRENT_USER, null);
-    if (user != null) {
-      userManager.setCurrentUser(user);
-    }
     String id = Hawk.get(HawkKeys.CURRENT_ACCOUNT_BOOK_ID, null);
     String name = Hawk.get(HawkKeys.CURRENT_ACCOUNT_BOOK_NAME, null);
     if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(name)) {

@@ -1,15 +1,12 @@
 package org.peace.savingtracker.user;
 
 import autodagger.AutoExpose;
-import autodagger.AutoInjector;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
 import com.orhanobut.hawk.Hawk;
 import de.greenrobot.event.EventBus;
-import java.util.Collections;
-import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.peace.savingtracker.MyApp;
@@ -18,7 +15,6 @@ import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.AccountBook;
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 
 /**
  * Created by peacepassion on 15/11/11.
@@ -27,7 +23,6 @@ import rx.functions.Func1;
 
   @Inject AVCloudAPI cloudAPI;
 
-  private User currentUser;
   private AccountBook currentAccountBook;
 
   private EventBus eventBus;
@@ -38,13 +33,6 @@ import rx.functions.Func1;
 
   public void logout() {
     AVUser.logOut();
-    setCurrentUser(null);
-    Hawk.remove(HawkKeys.CURRENT_USER);
-  }
-
-  public void setCurrentUser(User user) {
-    currentUser = user;
-    Hawk.put(HawkKeys.CURRENT_USER, user);
   }
 
   public void setCurrentAccountBook(AccountBook accountBook) {
@@ -59,18 +47,18 @@ import rx.functions.Func1;
   }
 
   public boolean isLogged() {
-    return currentUser != null;
+    return AVUser.getCurrentUser() != null;
   }
 
   public User getCurrentUser() {
-    return currentUser;
+    return AVUser.getCurrentUser(User.class);
   }
 
   public Observable<User> syncCurrentUser() {
     return Observable.create(new Observable.OnSubscribe<User>() {
       @Override public void call(Subscriber<? super User> subscriber) {
         AVQuery<User> query = AVQuery.getQuery(User.class);
-        query.getInBackground(currentUser.getObjectId(), new GetCallback<User>() {
+        query.getInBackground(getCurrentUser().getObjectId(), new GetCallback<User>() {
           @Override public void done(User user, AVException e) {
             if (subscriber.isUnsubscribed()) {
               return;
@@ -85,8 +73,7 @@ import rx.functions.Func1;
         });
       }
     }).map(user -> {
-      // todo find a better operator for this condition
-      setCurrentUser(user);
+      AVUser.changeCurrentUser(user, true);
       return user;
     });
   }

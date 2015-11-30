@@ -5,8 +5,6 @@ package org.peace.savingtracker.consts;
  */
 public interface HawkKeys {
 
-  String CURRENT_USER = "current_user";
-
   String CURRENT_ACCOUNT_BOOK_ID = "current_account_book_id";
 
   String CURRENT_ACCOUNT_BOOK_NAME = "current_account_book_name";
