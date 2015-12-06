@@ -81,6 +81,13 @@
     </activity>
 
     <activity
+        android:name=".ui.user.FriendListActivity"
+        android:screenOrientation="portrait"
+        android:configChanges="orientation|screenSize|keyboardHidden"
+        >
+    </activity>
+
+    <activity
         android:name=".ui.AddExpenseActivity"
         android:screenOrientation="portrait"
         android:configChanges="orientation|screenSize|keyboardHidden"

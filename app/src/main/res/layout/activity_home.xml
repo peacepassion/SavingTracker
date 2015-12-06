@@ -36,6 +36,12 @@
       />
 
   <Button
+      android:id="@+id/friend_list"
+      android:text="@string/friend_list"
+      style="@style/HomeButton"
+      />
+
+  <Button
       android:id="@+id/add_account_book"
       android:text="@string/add_account"
       style="@style/HomeButton"

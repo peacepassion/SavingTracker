@@ -35,4 +35,5 @@
   <string name="account_book_des">Account book description</string>
   <string name="selected_account_book">Selected Account Book: %s</string>
   <string name="select_account_book">Select Account Book</string>
+  <string name="friend_list">好友列表</string>
 </resources>
