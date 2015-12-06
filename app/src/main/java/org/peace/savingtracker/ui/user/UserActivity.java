@@ -52,7 +52,7 @@ import rx.schedulers.Schedulers;
   private void requestUserInfo() {
     userManager.syncCurrentUser()
         .flatMap(user -> avCloudAPI.queryIs(AccountBook.class, AccountBook.OWNER,
-            userManager.getCurrentUser().getObjectId()))
+            userManager.getCurrentUser()))
         .compose(bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -137,7 +137,7 @@ import rx.schedulers.Schedulers;
       holder.idTV.setText(book.getObjectId());
       holder.nameTV.setText(book.getName());
       holder.desTV.setText(book.getDescription());
-      holder.ownerTV.setText(book.getOwner());
+      holder.ownerTV.setText(book.getOwner().getUsername());
     }
 
     @Override public int getItemCount() {

@@ -53,7 +53,7 @@ import rx.schedulers.Schedulers;
       AccountBook book = new AccountBook();
       book.setName(accountBookNameET.getEditableText().toString());
       book.setDescription(accountBookDesET.getEditableText().toString());
-      book.setOwner(userManager.getCurrentUser().getObjectId());
+      book.setOwner(userManager.getCurrentUser());
       aVCloudAPI.insert(book)
           .compose(bindToLifecycle())
           .subscribeOn(Schedulers.io())

@@ -1,7 +1,6 @@
 package org.peace.savingtracker.ui.accountbook;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.joanzapata.iconify.widget.IconTextView;
-import de.greenrobot.event.EventBus;
 import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
@@ -20,11 +19,15 @@ import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.AccountBook;
+import org.peace.savingtracker.model.FriendManager;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
+import org.peace.savingtracker.user.User;
 import org.peace.savingtracker.user.UserManager;
+import org.peace.savingtracker.utils.ResUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -32,9 +35,9 @@ import rx.schedulers.Schedulers;
  */
 @AutoInjector(MyApp.class) public class SelectAccountBookActivity extends BaseActivity {
 
-  @Inject AVCloudAPI api;
+  @Inject FriendManager friendManager;
 
-  @Bind(R.id.list) RecyclerView bookRV;
+  @Bind(R.id.list) RecyclerView listView;
 
   private BookAdapter adapter;
 
@@ -46,14 +49,14 @@ import rx.schedulers.Schedulers;
   }
 
   private void setupBookListView() {
-    bookRV.setLayoutManager(new LinearLayoutManager(this));
+    listView.setLayoutManager(new LinearLayoutManager(this));
     adapter = new BookAdapter(this);
-    bookRV.setAdapter(adapter);
+    listView.setAdapter(adapter);
   }
 
   private void requestAccountBooks() {
     ProgressDialog progressDialog = new ProgressDialog(this);
-    api.queryAll(AccountBook.class)
+    cloudAPI.queryAll(AccountBook.class)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<List<AccountBook>>() {
@@ -99,10 +102,12 @@ import rx.schedulers.Schedulers;
 
     @Inject UserManager userManager;
 
+    private SelectAccountBookActivity activity;
     private LayoutInflater inflater;
     private List<AccountBook> books;
 
-    public BookAdapter(BaseActivity activity) {
+    public BookAdapter(SelectAccountBookActivity activity) {
+      this.activity = activity;
       activity.getAppComponent().inject(this);
       books = new LinkedList<>();
       inflater = LayoutInflater.from(activity);
@@ -120,11 +125,24 @@ import rx.schedulers.Schedulers;
     @Override public void onBindViewHolder(BookVH holder, int position) {
       AccountBook book = books.get(position);
       holder.bookNameTV.setText(book.getName());
-      holder.rootView.setOnClickListener(v -> {
-        userManager.setCurrentAccountBook(book);
-        notifyDataSetChanged();
-      });
+
       AccountBook currentBook = userManager.getCurrentBook();
+      holder.rootView.setOnLongClickListener(v -> {
+        new MaterialDialog.Builder(v.getContext()).items(new CharSequence[] {
+            ResUtil.getString(R.string.select_account_book),
+            ResUtil.getString(R.string.share_account_book)
+        }).itemsCallback((dialog, itemView, which, text) -> {
+          if (which == 0) {
+            userManager.setCurrentAccountBook(book);
+            notifyDataSetChanged();
+          } else if (which == 1) {
+            shareAccountBook(currentBook);
+          }
+        }).build().show();
+
+        return true;
+      });
+
       if (currentBook == null) {
         holder.selectIndicatorTV.setVisibility(View.GONE);
         return;
@@ -132,9 +150,72 @@ import rx.schedulers.Schedulers;
       if (currentBook.getObjectId().equals(book.getObjectId())) {
         holder.selectIndicatorTV.setVisibility(View.VISIBLE);
         holder.rootView.setOnClickListener(null);
-      } else  {
+      } else {
         holder.selectIndicatorTV.setVisibility(View.GONE);
       }
+    }
+
+    private void shareAccountBook(AccountBook accountBook) {
+      final List<User> friends = new LinkedList<>();
+      activity.friendManager.getFriends().subscribeOn(Schedulers.io()).map((List<User> users) -> {
+        friends.addAll(users);
+        List<CharSequence> userIds = new LinkedList<>();
+        for (User user : users) {
+          userIds.add(user.getObjectId());
+        }
+        return userIds.toArray(new CharSequence[userIds.size()]);
+      }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<CharSequence[]>() {
+        ProgressDialog dlg = new ProgressDialog(activity);
+
+        @Override public void onStart() {
+          dlg.show();
+        }
+
+        @Override public void onCompleted() {
+          dlg.dismiss();
+        }
+
+        @Override public void onError(Throwable e) {
+          dlg.dismiss();
+          activity.popHint(e.getMessage());
+        }
+
+        @Override public void onNext(CharSequence[] userIds) {
+          new MaterialDialog.Builder(activity).items(userIds)
+              .itemsCallback((dialog, itemView, which, text) -> shareAccountBook(accountBook,
+                  friends.get(which)))
+              .build()
+              .show();
+        }
+      });
+    }
+
+    private void shareAccountBook(AccountBook accountBook, User to) {
+      accountBook.addSharedUser(to);
+      activity.cloudAPI.update(accountBook)
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Subscriber<Void>() {
+            ProgressDialog dlg = new ProgressDialog(activity);
+
+            @Override public void onStart() {
+              dlg.show();
+            }
+
+            @Override public void onCompleted() {
+              dlg.dismiss();
+              activity.popHint(activity.getString(R.string.share_succ));
+            }
+
+            @Override public void onError(Throwable e) {
+              dlg.dismiss();
+              activity.popHint(e.getMessage());
+            }
+
+            @Override public void onNext(Void aVoid) {
+
+            }
+          });
     }
 
     @Override public int getItemCount() {
