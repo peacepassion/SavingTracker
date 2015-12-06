@@ -67,6 +67,7 @@ public class LoginActivity extends BaseActivity {
               popHint(e.getMessage(), true);
               return;
             }
+            user.changeCurrentUser(user, true);
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
           }
