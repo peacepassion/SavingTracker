@@ -3,37 +3,38 @@ package org.peace.savingtracker.ui.user;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.OnItemLongClick;
-import butterknife.OnLongClick;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.FollowCallback;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.LinkedList;
 import java.util.List;
+import javax.inject.Inject;
+import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.AddFriendRequest;
+import org.peace.savingtracker.model.FriendManager;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.user.User;
-import org.peace.savingtracker.utils.ResUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by peacepassion on 15/11/30.
  */
-public class SearchUserActivity extends BaseActivity {
+@AutoInjector(MyApp.class) public class SearchUserActivity extends BaseActivity {
+
+  @Inject FriendManager friendManager;
 
   @Bind(R.id.username) EditText usernameET;
   @Bind(R.id.confirm) Button confirmBtn;
@@ -44,6 +45,7 @@ public class SearchUserActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    appComponent.inject(this);
 
     initSearchResultList();
     initConfirmBtn();
@@ -58,10 +60,21 @@ public class SearchUserActivity extends BaseActivity {
     RxView.clickEvents(confirmBtn)
         .filter(viewClickEvent -> validateUsername())
         .subscribe(viewClickEvent -> {
-          cloudAPI.queryContains(User.class, "username", usernameET.getText().toString())
+          friendManager.getFriends()
               .subscribeOn(Schedulers.io())
+              .observeOn(Schedulers.io())
+              .flatMap(friends -> cloudAPI.queryContains(User.class, "username",
+                  usernameET.getText().toString())
+                  .flatMap(users -> Observable.from(users))
+                  .filter(user -> {
+                    for (User friend : friends) {
+                      if (friend.getObjectId().equals(user.getObjectId())) {
+                        return false;
+                      }
+                    }
+                    return true;
+                  }))
               .observeOn(AndroidSchedulers.mainThread())
-              .flatMap(users -> Observable.from(users))
               .filter(user -> {
                 if (user.getObjectId().equals(userManager.getCurrentUser().getObjectId())) {
                   return false;
