@@ -14,6 +14,7 @@ import butterknife.OnItemLongClick;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FollowCallback;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,12 +67,17 @@ public class MessageCenterActivity extends BaseActivity {
   private void requestMessages() {
     ProgressDialog dlg = new ProgressDialog(this);
 
-    Observable<List<AddFriendRequest>> toMe =
-        cloudAPI.queryIs(AddFriendRequest.class, AddFriendRequest.TO_USER,
-            userManager.getCurrentUser());
-    Observable<List<AddFriendRequest>> fromMe =
-        cloudAPI.queryIs(AddFriendRequest.class, AddFriendRequest.FROM_USER,
-            userManager.getCurrentUser());
+    AVQuery<AddFriendRequest> toMeQuery = AVQuery.getQuery(AddFriendRequest.class);
+    toMeQuery.whereEqualTo(AddFriendRequest.TO_USER, userManager.getCurrentUser());
+    toMeQuery.include(AddFriendRequest.FROM_USER);
+    toMeQuery.include(AddFriendRequest.TO_USER);
+    Observable<List<AddFriendRequest>> toMe = cloudAPI.query(toMeQuery);
+
+    AVQuery<AddFriendRequest> fromMeQuery = AVQuery.getQuery(AddFriendRequest.class);
+    fromMeQuery.whereEqualTo(AddFriendRequest.FROM_USER, userManager.getCurrentUser());
+    toMeQuery.include(AddFriendRequest.FROM_USER);
+    toMeQuery.include(AddFriendRequest.TO_USER);
+    Observable<List<AddFriendRequest>> fromMe = cloudAPI.query(fromMeQuery);
 
     Observable.concat(toMe, fromMe)
         .flatMap(addFriendRequests -> Observable.from(addFriendRequests))
