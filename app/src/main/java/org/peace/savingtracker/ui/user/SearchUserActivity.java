@@ -61,18 +61,19 @@ public class SearchUserActivity extends BaseActivity {
           cloudAPI.queryContains(User.class, "username", usernameET.getText().toString())
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
-              .map(users -> {
-                searchedUsers = users;
-                List<String> usernames = new LinkedList<>();
-                for (User user : users) {
-                  usernames.add(user.getUsername());
+              .flatMap(users -> Observable.from(users))
+              .filter(user -> {
+                if (user.getObjectId().equals(userManager.getCurrentUser().getObjectId())) {
+                  return false;
                 }
-                return usernames;
+                return true;
               })
-              .subscribe(new Subscriber<List<String>>() {
+              .map(user -> user.getUsername())
+              .subscribe(new Subscriber<String>() {
                 ProgressDialog progressDialog = new ProgressDialog(SearchUserActivity.this);
 
                 @Override public void onStart() {
+                  adapter.clear();
                   progressDialog.show();
                 }
 
@@ -85,9 +86,8 @@ public class SearchUserActivity extends BaseActivity {
                   popHint(e.getMessage());
                 }
 
-                @Override public void onNext(List<String> usernames) {
-                  adapter.clear();
-                  adapter.addAll(usernames);
+                @Override public void onNext(String username) {
+                  adapter.add(username);
                 }
               });
         });
@@ -107,18 +107,18 @@ public class SearchUserActivity extends BaseActivity {
                 @Override public void call(Subscriber<? super Void> subscriber) {
                   User me = userManager.getCurrentUser();
                   me.followInBackground(request.getToUser().getObjectId(), new FollowCallback() {
-                        @Override public void done(AVObject avObject, AVException e) {
-                          if (subscriber.isUnsubscribed()) {
-                            return;
-                          }
-                          if (e != null) {
-                            subscriber.onError(e);
-                            return;
-                          }
-                          subscriber.onNext(null);
-                          subscriber.onCompleted();
-                        }
-                      });
+                    @Override public void done(AVObject avObject, AVException e) {
+                      if (subscriber.isUnsubscribed()) {
+                        return;
+                      }
+                      if (e != null) {
+                        subscriber.onError(e);
+                        return;
+                      }
+                      subscriber.onNext(null);
+                      subscriber.onCompleted();
+                    }
+                  });
                 }
               }))
               .observeOn(AndroidSchedulers.mainThread())
