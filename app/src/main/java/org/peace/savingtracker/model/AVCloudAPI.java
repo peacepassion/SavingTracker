@@ -67,38 +67,10 @@ import rx.Subscriber;
     });
   }
 
-  public <T extends AVObject> Observable<List<T>> queryIs(Class<T> clazz, String key, Object target) {
+  public <T extends AVObject> Observable<List<T>> query(AVQuery<T> q) {
     return Observable.create(new Observable.OnSubscribe<List<T>>() {
       @Override public void call(Subscriber<? super List<T>> subscriber) {
-        AVQuery<T> query = AVQuery.getQuery(clazz);
-        query.whereEqualTo(key, target);
-        try {
-          query.findInBackground(new FindCallback<T>() {
-            @Override public void done(List<T> list, AVException e) {
-              if (subscriber.isUnsubscribed()) {
-                return;
-              }
-              if (e != null) {
-                subscriber.onError(e);
-                return;
-              }
-              subscriber.onNext(list);
-              subscriber.onCompleted();
-            }
-          });
-        } catch (Exception e) {
-          subscriber.onError(e);
-        }
-      }
-    });
-  }
-
-  public <T extends AVObject> Observable<List<T>> queryContains(Class<T> clazz, String key, String subString) {
-    return Observable.create(new Observable.OnSubscribe<List<T>>() {
-      @Override public void call(Subscriber<? super List<T>> subscriber) {
-        AVQuery<T> query = AVQuery.getQuery(clazz);
-        query.whereContains(key, subString);
-        query.findInBackground(new FindCallback<T>() {
+        q.findInBackground(new FindCallback<T>() {
           @Override public void done(List<T> list, AVException e) {
             if (subscriber.isUnsubscribed()) {
               return;
@@ -115,28 +87,22 @@ import rx.Subscriber;
     });
   }
 
+  public <T extends AVObject> Observable<List<T>> queryIs(Class<T> clazz, String key,
+      Object target) {
+    AVQuery<T> query = AVQuery.getQuery(clazz);
+    query.whereEqualTo(key, target);
+    return query(query);
+  }
+
+  public <T extends AVObject> Observable<List<T>> queryContains(Class<T> clazz, String key,
+      String subString) {
+    AVQuery<T> query = AVQuery.getQuery(clazz);
+    query.whereContains(key, subString);
+    return query(query);
+  }
+
   public <T extends AVObject> Observable<List<T>> queryAll(Class<T> clazz) {
-    return Observable.create(new Observable.OnSubscribe<List<T>>() {
-      @Override public void call(Subscriber<? super List<T>> subscriber) {
-        AVQuery<T> query = AVQuery.getQuery(clazz);
-        try {
-          query.findInBackground(new FindCallback<T>() {
-            @Override public void done(List<T> list, AVException e) {
-              if (subscriber.isUnsubscribed()) {
-                return;
-              }
-              if (e != null) {
-                subscriber.onError(e);
-                return;
-              }
-              subscriber.onNext(list);
-              subscriber.onCompleted();
-            }
-          });
-        } catch (Exception e) {
-          subscriber.onError(e);
-        }
-      }
-    });
+    AVQuery<T> query = AVQuery.getQuery(clazz);
+    return query(query);
   }
 }

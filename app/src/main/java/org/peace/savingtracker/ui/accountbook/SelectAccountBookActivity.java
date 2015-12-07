@@ -11,7 +11,10 @@ import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.avos.avoscloud.AVQuery;
 import com.joanzapata.iconify.widget.IconTextView;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
@@ -25,6 +28,7 @@ import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.user.User;
 import org.peace.savingtracker.user.UserManager;
 import org.peace.savingtracker.utils.ResUtil;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -44,6 +48,8 @@ import rx.schedulers.Schedulers;
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     appComponent.inject(this);
+    setTitle(getString(R.string.select_account_book));
+
     setupBookListView();
     requestAccountBooks();
   }
@@ -56,7 +62,15 @@ import rx.schedulers.Schedulers;
 
   private void requestAccountBooks() {
     ProgressDialog progressDialog = new ProgressDialog(this);
-    cloudAPI.queryAll(AccountBook.class)
+
+    Observable<List<AccountBook>> ownedBooks =
+        cloudAPI.queryIs(AccountBook.class, AccountBook.OWNER, userManager.getCurrentUser());
+
+    AVQuery<AccountBook> query = AVQuery.getQuery(AccountBook.class);
+    query.whereContainsAll(AccountBook.SHARED_USERS, Arrays.asList(userManager.getCurrentUser()));
+    Observable<List<AccountBook>> sharedBooks = cloudAPI.query(query);
+
+    Observable.concat(ownedBooks, sharedBooks)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<List<AccountBook>>() {
