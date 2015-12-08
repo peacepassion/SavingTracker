@@ -80,6 +80,7 @@ public class MessageCenterActivity extends BaseActivity {
     Observable<List<AddFriendRequest>> fromMe = cloudAPI.query(fromMeQuery);
 
     Observable.concat(toMe, fromMe)
+        .subscribeOn(Schedulers.io())
         .flatMap(addFriendRequests -> Observable.from(addFriendRequests))
         .filter(addFriendRequest -> {
           String meId = userManager.getCurrentUser().getObjectId();
@@ -89,7 +90,13 @@ public class MessageCenterActivity extends BaseActivity {
           }
           return true;
         })
-        .subscribeOn(Schedulers.io())
+        .distinct(addFriendRequest -> {
+          StringBuilder sb = new StringBuilder();
+          sb.append(addFriendRequest.getFromUser().getObjectId())
+              .append(" ")
+              .append(addFriendRequest.getToUser().getObjectId());
+          return sb.toString();
+        })
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<AddFriendRequest>() {
           @Override public void onStart() {
