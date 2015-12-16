@@ -80,6 +80,7 @@ public class MessageCenterActivity extends BaseActivity {
     Observable<List<AddFriendRequest>> fromMe = cloudAPI.query(fromMeQuery);
 
     Observable.concat(toMe, fromMe)
+        .compose(bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .flatMap(addFriendRequests -> Observable.from(addFriendRequests))
         .filter(addFriendRequest -> {

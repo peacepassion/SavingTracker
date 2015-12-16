@@ -58,6 +58,7 @@ import rx.schedulers.Schedulers;
 
   private void initConfirmBtn() {
     RxView.clickEvents(confirmBtn)
+        .compose(bindToLifecycle())
         .filter(viewClickEvent -> validateUsername())
         .subscribe(viewClickEvent -> {
           friendManager.getFriends()

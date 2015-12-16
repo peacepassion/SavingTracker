@@ -1,6 +1,5 @@
 package org.peace.savingtracker.ui.history;
 
-import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,15 +24,15 @@ import rx.schedulers.Schedulers;
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
-  private Context context;
+  private BaseActivity activity;
   private AVCloudAPI AVCloudAPI;
   private List<Expense> expenses;
   private ProgressDialog progressDialog;
 
-  public HistoryAdapter(Context context, AVCloudAPI AVCloudAPI) {
-    this.context = context;
+  public HistoryAdapter(BaseActivity activity, AVCloudAPI AVCloudAPI) {
+    this.activity = activity;
     this.AVCloudAPI = AVCloudAPI;
-    progressDialog = new ProgressDialog(context);
+    progressDialog = new ProgressDialog(activity);
     expenses = Collections.emptyList();
     loadData();
   }
@@ -43,7 +42,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
   }
 
   @Override public HistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    LayoutInflater inflater = LayoutInflater.from(context);
+    LayoutInflater inflater = LayoutInflater.from(activity);
     View root = inflater.inflate(R.layout.item_expense_history, parent, false);
     return new HistoryViewHolder(root);
   }
@@ -63,7 +62,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
   }
 
   private void alertDelete(Expense expense) {
-    new MaterialDialog.Builder(context).title("确定删除")
+    new MaterialDialog.Builder(activity).title("确定删除")
         .content("确定删除该笔账单?")
         .positiveText("确定")
         .negativeText("取消")
@@ -72,7 +71,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
             AVCloudAPI.delete(expense)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(((BaseActivity) context).bindToLifecycle())
+                .compose(activity.bindToLifecycle())
                 .subscribe(new Subscriber<Void>() {
                   @Override public void onStart() {
                     progressDialog.show();
@@ -84,7 +83,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
                   @Override public void onError(Throwable e) {
                     progressDialog.dismiss();
-                    ((BaseActivity) context).popHint(e.getMessage());
+                    activity.popHint(e.getMessage());
                   }
 
                   @Override public void onNext(Void aVoid) {
@@ -105,7 +104,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
     AVCloudAPI.queryAll(Expense.class)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .compose(((BaseActivity) context).bindToLifecycle())
+        .compose(activity.bindToLifecycle())
         .subscribe(new Subscriber<List<Expense>>() {
           @Override public void onStart() {
             progressDialog.show();
@@ -117,7 +116,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
           @Override public void onError(Throwable e) {
             progressDialog.dismiss();
-            ((BaseActivity) context).popHint(e.getMessage());
+            activity.popHint(e.getMessage());
           }
 
           @Override public void onNext(List<Expense> expenses) {

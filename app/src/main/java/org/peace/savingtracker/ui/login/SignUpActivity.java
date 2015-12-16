@@ -75,6 +75,7 @@ public class SignUpActivity extends BaseActivity {
         }
       }
     })
+        .compose(bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<Void>() {

@@ -55,33 +55,37 @@ import rx.schedulers.Schedulers;
   }
 
   private void requestFriendList() {
-    friendManager.getFriends().
-        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).map(users -> {
-      List<String> userId = new ArrayList<>(users.size());
-      for (User user : users) {
-        userId.add(user.getObjectId());
-      }
-      return userId;
-    }).subscribe(new Subscriber<List<String>>() {
-      ProgressDialog dlg = new ProgressDialog(FriendListActivity.this);
+    friendManager.getFriends() //
+        .compose(bindToLifecycle())
+        .subscribeOn(Schedulers.io()) //
+        .observeOn(AndroidSchedulers.mainThread()) //
+        .map(users -> {
+          List<String> userId = new ArrayList<>(users.size());
+          for (User user : users) {
+            userId.add(user.getObjectId());
+          }
+          return userId;
+        }) //
+        .subscribe(new Subscriber<List<String>>() {
+          ProgressDialog dlg = new ProgressDialog(FriendListActivity.this);
 
-      @Override public void onStart() {
-        dlg.show();
-      }
+          @Override public void onStart() {
+            dlg.show();
+          }
 
-      @Override public void onCompleted() {
-        dlg.dismiss();
-      }
+          @Override public void onCompleted() {
+            dlg.dismiss();
+          }
 
-      @Override public void onError(Throwable e) {
-        dlg.dismiss();
-        popHint(e.getMessage());
-      }
+          @Override public void onError(Throwable e) {
+            dlg.dismiss();
+            popHint(e.getMessage());
+          }
 
-      @Override public void onNext(List<String> userIds) {
-        adapter.clear();
-        adapter.addAll(userIds);
-      }
-    });
+          @Override public void onNext(List<String> userIds) {
+            adapter.clear();
+            adapter.addAll(userIds);
+          }
+        });
   }
 }

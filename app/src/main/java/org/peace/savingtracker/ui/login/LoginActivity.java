@@ -62,6 +62,9 @@ public class LoginActivity extends BaseActivity {
     AVUser.logInInBackground(usernameET.getText().toString(), passwordET.getText().toString(),
         new LogInCallback<User>() {
           @Override public void done(User user, AVException e) {
+            if (isFinishing()) {
+              return;
+            }
             dlg.dismiss();
             if (user == null) {
               popHint(e.getMessage(), true);

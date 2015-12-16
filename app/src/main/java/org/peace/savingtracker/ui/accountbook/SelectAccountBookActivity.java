@@ -71,6 +71,7 @@ import rx.schedulers.Schedulers;
     Observable<List<AccountBook>> sharedBooks = cloudAPI.query(query);
 
     Observable.concat(ownedBooks, sharedBooks)
+        .compose(bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<List<AccountBook>>() {
