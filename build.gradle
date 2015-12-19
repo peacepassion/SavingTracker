@@ -3,21 +3,26 @@
 buildscript {
   repositories {
     jcenter()
-    maven { url 'https://repos.zeroturnaround.com/nexus/content/repositories/zt-public-releases' }
-  }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:1.2.3'
-  }
-}
-
-allprojects {
-  repositories {
-    jcenter()
     maven {
-      url "https://jitpack.io"
+      url 'https://repos.zeroturnaround.com/nexus/content/repositories/zt-public-releases'
     }
-    maven {
-      url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+    dependencies {
+      classpath 'com.android.tools.build:gradle:1.2.3'
+    }
+  }
+
+  allprojects {
+    repositories {
+      jcenter()
+      maven {
+        url "https://jitpack.io"
+      }
+      maven {
+        url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+      }
+      maven {
+        url 'http://dl.bintray.com/peacepassion/maven'
+      }
     }
   }
 }
