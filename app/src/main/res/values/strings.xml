@@ -2,8 +2,9 @@
 <resources>
 
   <string name="app_name">Saving Tracker</string>
-  <string name="add_expense">增加开销</string>
-  <string name="add">增加</string>
+  <string name="add_expense">添加开销</string>
+  <string name="add_income">添加收入</string>
+  <string name="add">记账</string>
   <string name="report">报表</string>
   <string name="account">帐号</string>
   <string name="expense_amount">金额: </string>

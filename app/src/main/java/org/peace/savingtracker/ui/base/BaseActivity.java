@@ -128,7 +128,7 @@ import retrofit.Retrofit;
     return super.onOptionsItemSelected(item);
   }
 
-  public final void setTitle(String title) {
+  @Override public final void setTitle(CharSequence title) {
     if (!hasTitle()) {
       throw new IllegalStateException("this activity has no tool bar");
     }

@@ -34,7 +34,7 @@ public class HomeActivity extends BaseActivity {
 
   private void initViewPager() {
     fragments = new BaseHomeFragment[] {
-        HomeExpenseFragment.newIntance(), //
+        HomeExpenseFragment.newInstance(), //
         HomeReportFragment.newInstance(), //
         HomeUserCenterFragment.newInstance()
     };
@@ -50,6 +50,7 @@ public class HomeActivity extends BaseActivity {
     };
 
     viewPager.setAdapter(adapter);
+    viewPager.setOffscreenPageLimit(fragments.length);
 
     String[] titles = new String[] {
         getString(R.string.add), //
