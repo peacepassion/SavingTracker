@@ -1,63 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <LinearLayout
-      android:orientation="vertical"
+  <android.support.v4.view.ViewPager
+      android:id="@+id/view_pager"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      />
 
-    <Button
-        android:id="@+id/add_expense"
-        android:text="@string/add_expense"
-        style="@style/HomeButton"
-        />
+  <org.peacepassion.layout.SlidingTabLayout
+      android:id="@+id/sliding_tab_layout"
+      android:layout_width="match_parent"
+      android:layout_height="48dp"
+      android:layout_gravity="bottom"
+      />
 
-    <Button
-        android:id="@+id/view_expense_history"
-        android:text="@string/view_expense"
-        style="@style/HomeButton"
-        />
-
-    <Button
-        android:id="@+id/user_center"
-        android:text="@string/user_center"
-        style="@style/HomeButton"
-        />
-
-    <Button
-        android:id="@+id/message_center"
-        android:text="@string/message_center"
-        style="@style/HomeButton"
-        />
-
-    <Button
-        android:id="@+id/search_user"
-        android:text="@string/search_user"
-        style="@style/HomeButton"
-        />
-
-    <Button
-        android:id="@+id/friend_list"
-        android:text="@string/friend_list"
-        style="@style/HomeButton"
-        />
-
-    <Button
-        android:id="@+id/add_account_book"
-        android:text="@string/add_account"
-        style="@style/HomeButton"
-        />
-
-    <Button
-        android:id="@+id/select_account_book"
-        android:text="@string/select_account_book"
-        style="@style/HomeButton"
-        />
-
-  </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

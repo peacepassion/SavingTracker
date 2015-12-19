@@ -1,66 +1,71 @@
 package org.peace.savingtracker.ui.home;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import butterknife.OnClick;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import butterknife.Bind;
+import java.util.ArrayList;
+import java.util.List;
 import org.peace.savingtracker.BuildConfig;
 import org.peace.savingtracker.R;
-import org.peace.savingtracker.ui.AddExpenseActivity;
-import org.peace.savingtracker.ui.accountbook.AddAccountBookActivity;
-import org.peace.savingtracker.ui.accountbook.SelectAccountBookActivity;
 import org.peace.savingtracker.ui.base.BaseActivity;
-import org.peace.savingtracker.ui.history.ExpenseHistoryActivity;
-import org.peace.savingtracker.ui.user.FriendListActivity;
-import org.peace.savingtracker.ui.user.MessageCenterActivity;
-import org.peace.savingtracker.ui.user.SearchUserActivity;
-import org.peace.savingtracker.ui.user.UserActivity;
+import org.peacepassion.layout.DataHolder;
+import org.peacepassion.layout.SlidingTabLayout;
 
 /**
  * Created by peacepassion on 15/10/14.
  */
 public class HomeActivity extends BaseActivity {
 
+  @Bind(R.id.view_pager) ViewPager viewPager;
+  @Bind(R.id.sliding_tab_layout) SlidingTabLayout slidingTabLayout;
+
+  private BaseHomeFragment[] fragments;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setTitle(getString(R.string.app_name));
     attachDebugDrawer();
+
+    initViewPager();
   }
 
-  @OnClick({
-      R.id.add_expense, R.id.view_expense_history, R.id.user_center, R.id.add_account_book,
-      R.id.select_account_book, R.id.search_user, R.id.message_center, R.id.friend_list
-  }) public void onClick(View v) {
-    int id = v.getId();
-    switch (id) {
-      case R.id.add_expense:
-        startActivity(new Intent(this, AddExpenseActivity.class));
-        break;
-      case R.id.view_expense_history:
-        startActivity(new Intent(this, ExpenseHistoryActivity.class));
-        break;
-      case R.id.user_center:
-        startActivity(new Intent(this, UserActivity.class));
-        break;
-      case R.id.add_account_book:
-        startActivity(new Intent(this, AddAccountBookActivity.class));
-        break;
-      case R.id.select_account_book:
-        startActivity(new Intent(this, SelectAccountBookActivity.class));
-        break;
-      case R.id.search_user:
-        startActivity(new Intent(this, SearchUserActivity.class));
-        break;
-      case R.id.message_center:
-        startActivity(new Intent(this, MessageCenterActivity.class));
-        break;
-      case R.id.friend_list:
-        startActivity(new Intent(this, FriendListActivity.class));
-        break;
-      default:
-        break;
+  private void initViewPager() {
+    fragments = new BaseHomeFragment[] {
+        HomeExpenseFragment.newIntance(), //
+        HomeReportFragment.newInstance(), //
+        HomeUserCenterFragment.newInstance()
+    };
+
+    FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+      @Override public Fragment getItem(int position) {
+        return fragments[position];
+      }
+
+      @Override public int getCount() {
+        return fragments.length;
+      }
+    };
+
+    viewPager.setAdapter(adapter);
+
+    String[] titles = new String[] {
+        getString(R.string.add), //
+        getString(R.string.report), //
+        getString(R.string.account)
+    };
+
+    List<DataHolder> dataHolders = new ArrayList<>();
+    for (int i = 0; i < fragments.length; ++i) {
+      dataHolders.add(new DataHolder(getResources().getDrawable(R.drawable.unselected),
+          getResources().getDrawable(R.drawable.selected), //
+          titles[i], //
+          getResources().getColor(android.R.color.holo_blue_light)));
     }
+
+    slidingTabLayout.setUpViewPager(viewPager, dataHolders);
   }
 
   private void attachDebugDrawer() {

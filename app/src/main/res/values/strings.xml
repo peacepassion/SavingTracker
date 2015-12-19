@@ -3,11 +3,15 @@
 
   <string name="app_name">Saving Tracker</string>
   <string name="add_expense">增加开销</string>
+  <string name="add">增加</string>
+  <string name="report">报表</string>
+  <string name="account">帐号</string>
   <string name="expense_amount">金额: </string>
   <string name="expense_amount_hint">请输入开销金额</string>
   <string name="expense_category">类别: </string>
   <string name="confirm">确认</string>
   <string name="view_expense">查看花销历史</string>
+  <string name="expense_report">花销报表</string>
   <string name="user_center">个人中心</string>
   <string name="message_center">消息中心</string>
   <string name="search_user">查找用户</string>
