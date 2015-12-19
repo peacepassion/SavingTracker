@@ -9,7 +9,7 @@ import org.peace.savingtracker.ui.base.BaseActivity;
  */
 public class SplashActivity extends BaseActivity {
 
-  private static final int DURATION = 2000;
+  private static final int DURATION = 1000;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
