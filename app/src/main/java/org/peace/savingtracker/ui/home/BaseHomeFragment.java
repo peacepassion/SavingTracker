@@ -2,7 +2,6 @@ package org.peace.savingtracker.ui.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.view.View;
 import org.peace.savingtracker.ui.base.BaseFragment;
 
@@ -18,11 +17,7 @@ public abstract class BaseHomeFragment extends BaseFragment {
     homeActivity = (HomeActivity) activity;
   }
 
-  protected final void setTitle(String title) {
-    activity.setTitle(title);
-  }
-
-  protected final void setTitle(@StringRes int strRes) {
-    activity.setTitle(getText(strRes));
+  public String getTitle() {
+    return "";
   }
 }

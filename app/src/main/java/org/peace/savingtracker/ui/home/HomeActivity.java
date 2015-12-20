@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import butterknife.Bind;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,20 @@ public class HomeActivity extends BaseActivity {
           titles[i], //
           getResources().getColor(android.R.color.holo_blue_light)));
     }
+
+    if (!TextUtils.isEmpty(fragments[0].getTitle())) {
+      setTitle(fragments[0].getTitle());
+    }
+    viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+      @Override public void onPageSelected(int position) {
+        String title = fragments[position].getTitle();
+        if (TextUtils.isEmpty(title)) {
+          setTitle(getString(R.string.app_name));
+        } else {
+          setTitle(title);
+        }
+      }
+    });
 
     slidingTabLayout.setUpViewPager(viewPager, dataHolders);
   }

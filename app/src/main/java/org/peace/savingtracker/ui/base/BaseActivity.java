@@ -148,11 +148,7 @@ import retrofit.Retrofit;
         .show();
   }
 
-  public void onEvent(FakeEvent e) {
-
-  }
-
-  private static class FakeEvent {
+  public void onEvent(Void e) {
 
   }
 }

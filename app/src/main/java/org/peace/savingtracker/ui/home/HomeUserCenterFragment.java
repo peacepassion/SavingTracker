@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import butterknife.OnClick;
+import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.ui.AddExpenseActivity;
 import org.peace.savingtracker.ui.accountbook.AddAccountBookActivity;
@@ -13,6 +14,7 @@ import org.peace.savingtracker.ui.user.FriendListActivity;
 import org.peace.savingtracker.ui.user.MessageCenterActivity;
 import org.peace.savingtracker.ui.user.SearchUserActivity;
 import org.peace.savingtracker.ui.user.UserActivity;
+import org.peace.savingtracker.utils.ResUtil;
 
 /**
  * Created by peacepassion on 15/12/19.
@@ -25,7 +27,6 @@ public class HomeUserCenterFragment extends BaseHomeFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    setTitle(R.string.user_center);
   }
 
   @OnClick({
@@ -59,5 +60,9 @@ public class HomeUserCenterFragment extends BaseHomeFragment {
 
   @Override protected int getLayoutRes() {
     return R.layout.fragment_home_user_center;
+  }
+
+  @Override public String getTitle() {
+    return ResUtil.getString(R.string.user_center);
   }
 }
