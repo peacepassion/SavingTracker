@@ -14,13 +14,11 @@ import org.peace.savingtracker.ui.base.BaseActivity;
 /**
  * Created by peacepassion on 15/11/10.
  */
-@AutoInjector(MyApp.class) public class ExpenseHistoryActivity extends BaseActivity {
-
-  @Inject AVCloudAPI AVCloudAPI;
+public class ExpenseHistoryActivity extends BaseActivity {
 
   @Bind(R.id.expense_history_list) RecyclerView historyRV;
 
-  HistoryAdapter adapter;
+  private HistoryAdapter adapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -37,7 +35,7 @@ import org.peace.savingtracker.ui.base.BaseActivity;
   }
 
   private void initHistoryRV() {
-    adapter = new HistoryAdapter(this, AVCloudAPI);
+    adapter = new HistoryAdapter(this);
     historyRV.setLayoutManager(new LinearLayoutManager(this));
     historyRV.setAdapter(adapter);
   }

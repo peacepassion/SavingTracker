@@ -33,7 +33,7 @@ import com.avos.avoscloud.AVObject;
     setDate(date);
     setCategory(category);
     setValue(value);
-    setAccoutntBookId(accountBookId);
+    setAccountBookId(accountBookId);
   }
 
   public String getUserId() {
@@ -80,7 +80,7 @@ import com.avos.avoscloud.AVObject;
     put(VALUE, value);
   }
 
-  public void setAccoutntBookId(String id) {
+  public void setAccountBookId(String id) {
     put(ACCOUNT_BOOK_ID, id);
   }
 }
