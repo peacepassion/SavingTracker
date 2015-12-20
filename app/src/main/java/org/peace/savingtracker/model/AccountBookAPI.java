@@ -40,6 +40,10 @@ import rx.Observable;
   }
 
   public Observable<List<AccountBook>> getPermittedAccountBooks() {
-    return Observable.concat(getOwnedAccountBooks(), getSharedAccountBooks());
+    return Observable.zip(getOwnedAccountBooks(), getSharedAccountBooks(),
+        (accountBooks, accountBooks2) -> {
+          accountBooks.addAll(accountBooks2);
+          return accountBooks;
+        });
   }
 }
