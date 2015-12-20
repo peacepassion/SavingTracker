@@ -22,6 +22,7 @@ import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.AccountBook;
+import org.peace.savingtracker.model.AccountBookAPI;
 import org.peace.savingtracker.model.FriendManager;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
@@ -40,6 +41,7 @@ import rx.schedulers.Schedulers;
 @AutoInjector(MyApp.class) public class SelectAccountBookActivity extends BaseActivity {
 
   @Inject FriendManager friendManager;
+  @Inject AccountBookAPI accountBookAPI;
 
   @Bind(R.id.list) RecyclerView listView;
 
@@ -63,14 +65,7 @@ import rx.schedulers.Schedulers;
   private void requestAccountBooks() {
     ProgressDialog progressDialog = new ProgressDialog(this);
 
-    Observable<List<AccountBook>> ownedBooks =
-        cloudAPI.queryIs(AccountBook.class, AccountBook.OWNER, userManager.getCurrentUser());
-
-    AVQuery<AccountBook> query = AVQuery.getQuery(AccountBook.class);
-    query.whereContainsAll(AccountBook.SHARED_USERS, Arrays.asList(userManager.getCurrentUser()));
-    Observable<List<AccountBook>> sharedBooks = cloudAPI.query(query);
-
-    Observable.concat(ownedBooks, sharedBooks)
+    accountBookAPI.getPermittedAccountBooks()
         .compose(bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

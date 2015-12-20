@@ -1,5 +1,6 @@
 package org.peace.savingtracker.user;
 
+import android.support.annotation.Nullable;
 import autodagger.AutoExpose;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
@@ -35,14 +36,20 @@ import rx.Subscriber;
     AVUser.logOut();
   }
 
-  public void setCurrentAccountBook(AccountBook accountBook) {
+  public void setCurrentAccountBook(@Nullable AccountBook accountBook) {
     this.currentAccountBook = accountBook;
-    Hawk.put(HawkKeys.CURRENT_ACCOUNT_BOOK_ID, currentAccountBook.getObjectId());
-    Hawk.put(HawkKeys.CURRENT_ACCOUNT_BOOK_NAME, currentAccountBook.getName());
+    if (accountBook == null) {
+      Hawk.remove(HawkKeys.CURRENT_ACCOUNT_BOOK_ID);
+      Hawk.remove(HawkKeys.CURRENT_ACCOUNT_BOOK_NAME);
+    } else {
+      Hawk.put(HawkKeys.CURRENT_ACCOUNT_BOOK_ID, currentAccountBook.getObjectId());
+      Hawk.put(HawkKeys.CURRENT_ACCOUNT_BOOK_NAME, currentAccountBook.getName());
+    }
+
     eventBus.post(new CurrentAccountBookChangeEvent());
   }
 
-  public AccountBook getCurrentBook() {
+  @Nullable public AccountBook getCurrentBook() {
     return currentAccountBook;
   }
 

@@ -39,6 +39,8 @@ import retrofit.Retrofit;
 @Singleton @AutoComponent(modules = { MyAppModule.class }) @AutoInjector public class MyApp
     extends Application {
 
+  public static MyApp app;
+
   @Inject Retrofit retrofit;
 
   @Nullable @Inject RefWatcher refWatcher;
@@ -49,6 +51,8 @@ import retrofit.Retrofit;
 
   @Override public void onCreate() {
     super.onCreate();
+
+    app = this;
 
     initDagger();
     initLogger();

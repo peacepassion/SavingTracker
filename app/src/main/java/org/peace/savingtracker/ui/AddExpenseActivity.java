@@ -2,6 +2,7 @@ package org.peace.savingtracker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.Voice;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,11 +12,13 @@ import android.widget.TextView;
 import autodagger.AutoInjector;
 import butterknife.Bind;
 import com.jakewharton.rxbinding.view.RxView;
+import java.util.List;
 import javax.inject.Inject;
 import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.AccountBook;
+import org.peace.savingtracker.model.AccountBookAPI;
 import org.peace.savingtracker.model.Expense;
 import org.peace.savingtracker.ui.accountbook.SelectAccountBookActivity;
 import org.peace.savingtracker.ui.base.BaseActivity;
@@ -23,8 +26,10 @@ import org.peace.savingtracker.ui.widget.ProgressDialog;
 import org.peace.savingtracker.user.User;
 import org.peace.savingtracker.user.UserManager;
 import org.peace.savingtracker.utils.SystemUtil;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -33,6 +38,7 @@ import rx.schedulers.Schedulers;
 @AutoInjector(MyApp.class) public class AddExpenseActivity extends BaseActivity {
 
   @Inject AVCloudAPI AVCloudAPI;
+  @Inject AccountBookAPI accountBookAPI;
 
   @Bind(R.id.expense_amount_et) EditText expenseAmountET;
   @Bind(R.id.expense_category_sp) Spinner expenseCategorySp;
@@ -69,13 +75,29 @@ import rx.schedulers.Schedulers;
     }).subscribe(viewClickEvent -> {
       double value = Double.valueOf(expenseAmountET.getText().toString());
       User user = userManager.getCurrentUser();
-      Expense obj = new Expense(user.getObjectId(), user.getUsername(), System.currentTimeMillis(),
-          (String) expenseCategorySp.getSelectedItem(), value,
+      Expense obj = new Expense(user.getObjectId(), //
+          user.getUsername(), //
+          System.currentTimeMillis(), //
+          (String) expenseCategorySp.getSelectedItem(), //
+          value, //
           userManager.getCurrentBook().getObjectId());
       ProgressDialog dlg = new ProgressDialog(this);
-      AVCloudAPI.insert(obj)
+
+      accountBookAPI.getPermittedAccountBooks()
           .subscribeOn(Schedulers.io())
-          .subscribeOn(AndroidSchedulers.mainThread())
+          .observeOn(Schedulers.io())
+          .flatMap(accountBooks -> {
+            AccountBook current = userManager.getCurrentBook();
+            for (AccountBook accountBook : accountBooks) {
+              if (accountBook.getObjectId().equals(current.getObjectId())) {
+                return AVCloudAPI.insert(obj);
+              }
+            }
+
+            userManager.setCurrentAccountBook(null);
+            return Observable.error(new Exception("当前账本已失效,请重新选择账本"));
+          })
+          .observeOn(AndroidSchedulers.mainThread())
           .compose(bindToLifecycle())
           .subscribe(new Subscriber<Void>() {
             @Override public void onStart() {

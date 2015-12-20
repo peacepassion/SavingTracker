@@ -22,7 +22,11 @@ import com.avos.avoscloud.AVObject;
 
   }
 
-  public Expense(String userId, String name, long date, String category, double value,
+  public Expense(String userId, //
+      String name, //
+      long date, //
+      String category, //
+      double value,//
       String accountBookId) {
     setUserId(userId);
     setName(name);
