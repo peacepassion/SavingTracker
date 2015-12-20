@@ -2,8 +2,8 @@
 
   <style name="BaseTheme"
       parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="colorPrimary">@color/app_primary_accent</item>
-    <item name="colorPrimaryDark">@color/cyan_a700_plus</item>
+    <item name="colorPrimary">@color/orange</item>
+    <item name="colorPrimaryDark">@color/orange</item>
     <item name="android:windowBackground">@color/background</item>
   </style>
 
@@ -26,7 +26,7 @@
 
   <style name="ToolBarTextAppearance"
       parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-    <item name="android:textColor">@color/io15_white</item>
+    <item name="android:textColor">@color/color_3</item>
   </style>
 
   <style name="STTransitionAnim"

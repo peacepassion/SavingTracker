@@ -15,8 +15,11 @@
   <org.peacepassion.layout.SlidingTabLayout
       android:id="@+id/sliding_tab_layout"
       android:layout_width="match_parent"
-      android:layout_height="48dp"
+      android:layout_height="wrap_content"
       android:layout_gravity="bottom"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:background="@drawable/white_fill_grey_stroke_rec"
       />
 
 </LinearLayout>

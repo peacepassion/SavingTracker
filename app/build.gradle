@@ -59,7 +59,7 @@ android {
 dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
 
-  compile 'org.peacepassion:slidingtablayout:0.1.2'
+  compile 'org.peacepassion:slidingtablayout:0.1.3'
 
   compile 'com.android.support:design:22.2.1'
   compile 'com.android.support:support-v4:22.0.0'
