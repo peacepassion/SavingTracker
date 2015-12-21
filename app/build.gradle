@@ -34,6 +34,9 @@ android {
     targetSdkVersion 23
     versionCode 1
     versionName "1.0"
+
+    // Enabling multidex support.
+//    multiDexEnabled true
   }
 
   buildTypes {
@@ -80,6 +83,7 @@ dependencies {
   compile 'com.github.orhanobut:hawk:1.19'
   compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.0'
   compile 'de.greenrobot:eventbus:2.4.0'
+  compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
 
   apt 'com.github.lukaspili.autodagger2:autodagger2-compiler:1.1'
   compile 'com.github.lukaspili.autodagger2:autodagger2:1.1'

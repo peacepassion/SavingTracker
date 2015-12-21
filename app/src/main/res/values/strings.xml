@@ -12,6 +12,9 @@
   <string name="expense_category">类别: </string>
   <string name="confirm">确认</string>
   <string name="view_expense">查看花销历史</string>
+  <string name="view_daily_bar">查看每日走势</string>
+  <string name="no_data_title">当前账本下没有记录</string>
+  <string name="no_data_des">有花销后,可不要忘了记录下来</string>
   <string name="expense_report">花销报表</string>
   <string name="user_center">个人中心</string>
   <string name="message_center">消息中心</string>

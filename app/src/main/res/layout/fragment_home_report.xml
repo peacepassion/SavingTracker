@@ -10,4 +10,10 @@
       style="@style/HomeButton"
       />
 
+  <Button
+      android:id="@+id/view_daily_bar"
+      android:text="@string/view_daily_bar"
+      style="@style/HomeButton"
+      />
+
 </LinearLayout>

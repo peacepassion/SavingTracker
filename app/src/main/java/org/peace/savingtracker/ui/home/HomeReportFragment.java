@@ -7,6 +7,7 @@ import android.view.View;
 import butterknife.OnClick;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.ui.history.ExpenseHistoryActivity;
+import org.peace.savingtracker.ui.report.DailyTrendActivity;
 import org.peace.savingtracker.utils.ResUtil;
 
 /**
@@ -32,5 +33,9 @@ public class HomeReportFragment extends BaseHomeFragment {
 
   @OnClick(R.id.view_expense_history) public void checkExpenseHistory() {
     startActivity(new Intent(activity, ExpenseHistoryActivity.class));
+  }
+
+  @OnClick(R.id.view_daily_bar) public void viewDailyTrend() {
+    startActivity(new Intent(activity, DailyTrendActivity.class));
   }
 }

@@ -101,6 +101,12 @@
         />
 
     <activity
+        android:name=".ui.report.DailyTrendActivity"
+        android:screenOrientation="portrait"
+        android:configChanges="orientation|screenSize|keyboardHidden"
+        />
+
+    <activity
         android:name=".ui.accountbook.AddAccountBookActivity"
         android:screenOrientation="portrait"
         android:configChanges="orientation|screenSize|keyboardHidden"

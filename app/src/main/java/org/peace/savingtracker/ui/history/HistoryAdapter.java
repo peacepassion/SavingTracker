@@ -15,6 +15,7 @@ import org.peace.savingtracker.MyApp;
 import org.peace.savingtracker.R;
 import org.peace.savingtracker.model.AVCloudAPI;
 import org.peace.savingtracker.model.Expense;
+import org.peace.savingtracker.model.ExpenseAPI;
 import org.peace.savingtracker.model.ExpenseHelper;
 import org.peace.savingtracker.ui.base.BaseActivity;
 import org.peace.savingtracker.ui.widget.ProgressDialog;
@@ -32,6 +33,7 @@ import rx.schedulers.Schedulers;
 
   @Inject UserManager userManager;
   @Inject AVCloudAPI cloudAPI;
+  @Inject ExpenseAPI expenseAPI;
 
   private BaseActivity activity;
   private List<Expense> expenses;
@@ -109,12 +111,8 @@ import rx.schedulers.Schedulers;
   }
 
   private void loadData() {
-    Observable<List<Expense>> observable =
-        userManager.getCurrentBook() == null ? Observable.error(new Exception("必须选择一个账本"))
-            : cloudAPI.queryIs(Expense.class, Expense.ACCOUNT_BOOK_ID,
-                userManager.getCurrentBook().getObjectId());
-
-    observable.subscribeOn(Schedulers.io())
+    expenseAPI.getCurrentAccountBookExpenses()
+        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(activity.bindToLifecycle())
         .subscribe(new Subscriber<List<Expense>>() {
